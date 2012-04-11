@@ -12,7 +12,8 @@ License:      GPLv2 or later
 
 Text Domain:  a8c-developer
 Domain Path:  /languages/
-*/
+
+**************************************************************************/
 
 class Automattic_Developer {
 
