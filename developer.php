@@ -28,10 +28,12 @@ class Automattic_Developer {
 	private $settings_page_slug   = 'a8c_developer';
 
 	function __construct() {
-		add_action( 'init',       array( &$this, 'init' ) );
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+		add_action( 'init',           array( &$this, 'init' ) );
+		add_action( 'admin_init',     array( &$this, 'admin_init' ) );
 
-		add_action( 'admin_menu', array( &$this, 'register_settings_page' ) );
+		add_action( 'admin_menu',     array( &$this, 'register_settings_page' ) );
+
+		add_action( 'admin_bar_menu', array( &$this, 'add_node_to_admin_bar' ) );
 	}
 
 	// Allows private variables to be read. Basically implements read-only variables.
@@ -81,6 +83,18 @@ class Automattic_Developer {
 		add_options_page( __( 'Automattic Developer Helper', 'a8c-developer' ), __( 'Developer', 'a8c-developer' ), 'manage_options', $this->settings_page_slug, array( &$this, 'settings_page' ) );
 	}
 
+	public function add_node_to_admin_bar( $wp_admin_bar ) {
+		$wp_admin_bar->add_node( array(
+			'id'     => $this->settings_page_slug,
+			'title'  => __( 'Developer', 'a8c-developer' ),
+			'parent' => 'top-secondary', // Off on the right side
+			'href'   => admin_url( 'options-general.php?page=' . $this->settings_page_slug ),
+			'meta'   => array(
+				'title' => __( 'View the Automattic Developer Helper settings and status page', 'a8c-developer' ),
+			),
+		) );
+	}
+
 	public function admin_notices_setup_nag() {
 		global $parent_file, $hook_suffix;
 
@@ -88,7 +102,7 @@ class Automattic_Developer {
 		if ( 'settings_page_' . $this->settings_page_slug == $hook_suffix )
 			return;
 
-		add_settings_error( $this->option_name, $this->option_name. '_not_set_up', sprintf( __( 'Please <a href="%s">configure the development plugin</a>. TODO: Copy.', 'a8c-developer' ), admin_url( 'options-general.php?page=a8c_developer' ) ) );
+		add_settings_error( $this->option_name, $this->option_name. '_not_set_up', sprintf( __( 'Please <a href="%s">configure the development plugin</a>. TODO: Copy.', 'a8c-developer' ), admin_url( 'options-general.php?page=' . $this->settings_page_slug ) ) );
 
 		// Avoid a double message
 		if ( 'options-general.php' != $parent_file )
