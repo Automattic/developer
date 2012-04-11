@@ -2,15 +2,16 @@
 
 **************************************************************************
 
-Plugin Name:  Automattic Developer Helper
-Plugin URI:   
-Description:  
-Version:      
+Plugin Name:  Developer
+Plugin URI:   http://wordpress.org/extend/plugins/developer/
+Description:  The first stop for every WordPress developer
+Version:      0.1
 Author:       Automattic
-Author URI:   http://automattic.com/
+Author URI:   http://automattic.com/wordpress-plugins/
+License:      GPLv2 or later
 
 Text Domain:  a8c-developer
-Domain Path:  /localization/
+Domain Path:  /languages/
 */
 
 class Automattic_Developer {
