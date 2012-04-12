@@ -17,15 +17,16 @@ Domain Path:  /languages/
 
 class Automattic_Developer {
 
-	public $settings              = array();
-	public $default_settings      = array();
+	public $settings                   = array();
+	public $default_settings           = array();
 
-	public $recommended_plugins   = array();
-	public $recommended_constants = array();
+	public $recommended_plugins        = array();
+	public $recommended_constants      = array();
 
 	// Using "private" for read-only functionality. See __get().
-	private $option_name          = 'a8c_developer';
-	private $settings_page_slug   = 'a8c_developer';
+	private $option_name               = 'a8c_developer';
+	private $settings_page_slug        = 'a8c_developer';
+	private $settings_page_hook_suffix = false;
 
 	function __construct() {
 		add_action( 'init',           array( &$this, 'init' ) );
@@ -80,7 +81,7 @@ class Automattic_Developer {
 	}
 
 	public function register_settings_page() {
-		add_options_page( __( 'Automattic Developer Helper', 'a8c-developer' ), __( 'Developer', 'a8c-developer' ), 'manage_options', $this->settings_page_slug, array( &$this, 'settings_page' ) );
+		$this->settings_page_hook_suffix = add_options_page( __( 'Automattic Developer Helper', 'a8c-developer' ), __( 'Developer', 'a8c-developer' ), 'manage_options', $this->settings_page_slug, array( &$this, 'settings_page' ) );
 	}
 
 	public function add_node_to_admin_bar( $wp_admin_bar ) {
@@ -99,7 +100,7 @@ class Automattic_Developer {
 		global $parent_file, $hook_suffix;
 
 		// Don't do anything on this plugin's settings page
-		if ( 'settings_page_' . $this->settings_page_slug == $hook_suffix )
+		if ( $this->settings_page_hook_suffix == $hook_suffix )
 			return;
 
 		add_settings_error( $this->option_name, $this->option_name. '_not_set_up', sprintf( __( 'Please <a href="%s">configure the development plugin</a>. TODO: Copy.', 'a8c-developer' ), admin_url( 'options-general.php?page=' . $this->settings_page_slug ) ) );
