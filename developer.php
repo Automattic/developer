@@ -136,7 +136,7 @@ class Automattic_Developer {
 		add_settings_section( 'a8c_developer_constants', esc_html__( 'Constants', 'a8c-developer' ), array( &$this, 'settings_section_constants' ), $this->settings_page_slug . '_status' );
 
 		$recommended_constants = array(
-			'WP_DEBUG'    => sprintf( __( 'Enables <a href="%s" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' ), 'http://codex.wordpress.org/Debugging_in_WordPress' ),
+			'WP_DEBUG'    => __( 'Enables <a href="http://codex.wordpress.org/Debugging_in_WordPress" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' ),
 			'SAVEQUERIES' => esc_html__( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' ),
 			'FOOBAR'      => 'A dummy constant for showing a missing constant',
 		);
@@ -213,7 +213,7 @@ class Automattic_Developer {
 	}
 
 	public function settings_section_constants() {
-		echo '<p>' . sprintf( __( 'We recommend you set the following constants to <code>true</code> in your <code>wp-config.php</code> file. <a href="%s" target="_blank">Need help?</a>', 'a8c-developer' ), 'http://codex.wordpress.org/Editing_wp-config.php' ) . '</p>';
+		echo '<p>' . __( 'We recommend you set the following constants to <code>true</code> in your <code>wp-config.php</code> file. <a href="http://codex.wordpress.org/Editing_wp-config.php" target="_blank">Need help?</a>', 'a8c-developer' ) . '</p>';
 	}
 
 	// TODO: Make this not shitty
