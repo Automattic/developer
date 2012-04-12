@@ -20,9 +20,6 @@ class Automattic_Developer {
 	public $settings                   = array();
 	public $default_settings           = array();
 
-	public $recommended_plugins        = array();
-	public $recommended_constants      = array();
-
 	// Using "private" for read-only functionality. See __get().
 	private $option_name               = 'a8c_developer';
 	private $settings_page_slug        = 'a8c_developer';
@@ -48,40 +45,6 @@ class Automattic_Developer {
 		);
 
 		$this->settings = wp_parse_args( (array) get_option( $this->option_name ), $this->default_settings );
-
-		$this->recommended_plugins = array(
-			'debug-bar' => array(
-				'name'   => esc_html__( 'Debug Bar', 'a8c-developer' ),
-				'active' => class_exists( 'Debug_Bar' ),
-			),
-			'log-deprecated-notices' => array(
-				'name'   => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
-				'active' => class_exists( 'Deprecated_Log' ),
-			),
-			'foobar' => array(
-				'name'   => 'Dummy Test Plugin',
-				'active' => false,
-			),
-			// TODO: Add more?
-		);
-
-		if ( 'wpcom-vip' == $this->settings['project_type'] ) {
-			$this->recommended_plugins['jetpack'] = array(
-				'name'   => esc_html__( 'Jetpack', 'a8c-developer' ),
-				'active' => class_exists( 'Jetpack' ),
-			);
-			$this->recommended_plugins['polldaddy'] = array(
-				'name'   => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
-				'active' => class_exists( 'WP_Polldaddy' ),
-			);
-
-		}
-
-		$this->recommended_constants = array(
-			'WP_DEBUG'    => sprintf( __( 'Enables <a href="%s" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' ), 'http://codex.wordpress.org/Debugging_in_WordPress' ),
-			'SAVEQUERIES' => __( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' ),
-			'FOOBAR'      => 'A dummy constant for showing a missing constant',
-		);
 	}
 
 	public function admin_init() {
@@ -133,14 +96,52 @@ class Automattic_Developer {
 			),
 		) );
 
+
 		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( &$this, 'settings_section_plugins' ), $this->settings_page_slug . '_status' );
-		foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
+
+		$recommended_plugins = array(
+			'debug-bar' => array(
+				'name'   => esc_html__( 'Debug Bar', 'a8c-developer' ),
+				'active' => class_exists( 'Debug_Bar' ),
+			),
+			'log-deprecated-notices' => array(
+				'name'   => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
+				'active' => class_exists( 'Deprecated_Log' ),
+			),
+			'foobar' => array(
+				'name'   => 'Dummy Test Plugin',
+				'active' => false,
+			),
+			// TODO: Add more?
+		);
+
+		if ( 'wpcom-vip' == $this->settings['project_type'] ) {
+			$recommended_plugins['jetpack'] = array(
+				'name'   => esc_html__( 'Jetpack', 'a8c-developer' ),
+				'active' => class_exists( 'Jetpack' ),
+			);
+			$recommended_plugins['polldaddy'] = array(
+				'name'   => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
+				'active' => class_exists( 'WP_Polldaddy' ),
+			);
+
+		}
+
+		foreach ( $recommended_plugins as $plugin_slug => $plugin_details ) {
 			$plugin_details = array_merge( array( 'slug' => $plugin_slug ), $plugin_details );
 			add_settings_field( 'a8c_developer_plugin_' . $plugin_slug, $plugin_details['name'], array( &$this, 'settings_field_plugin' ), $this->settings_page_slug . '_status', 'a8c_developer_plugins', $plugin_details );
 		}
 
+
 		add_settings_section( 'a8c_developer_constants', esc_html__( 'Environment Configuration', 'a8c-developer' ), array( &$this, 'settings_section_constants' ), $this->settings_page_slug . '_status' );
-		foreach ( $this->recommended_constants as $constant => $description ) {
+
+		$recommended_constants = array(
+			'WP_DEBUG'    => sprintf( __( 'Enables <a href="%s" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' ), 'http://codex.wordpress.org/Debugging_in_WordPress' ),
+			'SAVEQUERIES' => __( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' ),
+			'FOOBAR'      => 'A dummy constant for showing a missing constant',
+		);
+
+		foreach ( $recommended_constants as $constant => $description ) {
 			add_settings_field( 'a8c_developer_constant_' . $constant, $constant, array( &$this, 'settings_field_constant' ), $this->settings_page_slug . '_status', 'a8c_developer_constants', array(
 				'constant'    => $constant,
 				'description' => $description,
