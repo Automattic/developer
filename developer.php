@@ -116,7 +116,7 @@ class Automattic_Developer {
 			'name'        => 'project_type',
 			'description' => __( 'Are you developing plugins and themes for <a href="http://wordpress.org/">self-hosted blogs</a> or are you working on a <a href="http://vip.wordpess.com/">WordPress.com VIP</a> project?', 'a8c-developer' ),
 			'options'     => array(
-				'wporg' => esc_html__( 'WordPress.org', 'a8c-developer' ),
+				'wporg'     => esc_html__( 'WordPress.org', 'a8c-developer' ),
 				'wpcom-vip' => esc_html__( 'WordPress.com VIP', 'a8c-developer' ),
 			),
 		) );
@@ -210,11 +210,11 @@ class Automattic_Developer {
 			echo '<br /><span class="description">' . $args['description'] . '</span>';
 	}
 
-	public function settings_validate( $settings ) {
-		// Don't save, keeps the nag
-		return false;
+	public function settings_validate( $raw_settings ) {
+		$settings = array();
 
-		// TODO: VALIDATE
+		$settings['project_type'] = ( ! empty( $raw_settings['project_type'] ) && 'wpcom-vip' == $raw_settings['project_type'] ) ? 'wpcom-vip' : 'wporg';
+
 		return $settings;
 	}
 }
