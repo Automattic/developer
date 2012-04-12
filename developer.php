@@ -56,17 +56,17 @@ class Automattic_Developer {
 	}
 
 	public function register_settings_page() {
-		$this->settings_page_hook_suffix = add_options_page( __( 'Automattic Developer Helper', 'a8c-developer' ), __( 'Developer', 'a8c-developer' ), 'manage_options', $this->settings_page_slug, array( &$this, 'settings_page' ) );
+		$this->settings_page_hook_suffix = add_options_page( esc_html__( 'Automattic Developer Helper', 'a8c-developer' ), esc_html__( 'Developer', 'a8c-developer' ), 'manage_options', $this->settings_page_slug, array( &$this, 'settings_page' ) );
 	}
 
 	public function add_node_to_admin_bar( $wp_admin_bar ) {
 		$wp_admin_bar->add_node( array(
 			'id'     => $this->settings_page_slug,
-			'title'  => __( 'Developer', 'a8c-developer' ),
+			'title'  => esc_html__( 'Developer', 'a8c-developer' ),
 			'parent' => 'top-secondary', // Off on the right side
 			'href'   => admin_url( 'options-general.php?page=' . $this->settings_page_slug ),
 			'meta'   => array(
-				'title' => __( 'View the Automattic Developer Helper settings and status page', 'a8c-developer' ),
+				'title' => esc_html__( 'View the Automattic Developer Helper settings and status page', 'a8c-developer' ),
 			),
 		) );
 	}
@@ -133,11 +133,11 @@ class Automattic_Developer {
 		}
 
 
-		add_settings_section( 'a8c_developer_constants', esc_html__( 'Environment Configuration', 'a8c-developer' ), array( &$this, 'settings_section_constants' ), $this->settings_page_slug . '_status' );
+		add_settings_section( 'a8c_developer_constants', esc_html__( 'Constants', 'a8c-developer' ), array( &$this, 'settings_section_constants' ), $this->settings_page_slug . '_status' );
 
 		$recommended_constants = array(
 			'WP_DEBUG'    => sprintf( __( 'Enables <a href="%s" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' ), 'http://codex.wordpress.org/Debugging_in_WordPress' ),
-			'SAVEQUERIES' => __( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' ),
+			'SAVEQUERIES' => esc_html__( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' ),
 			'FOOBAR'      => 'A dummy constant for showing a missing constant',
 		);
 
@@ -147,6 +147,11 @@ class Automattic_Developer {
 				'description' => $description,
 			) );
 		}
+
+
+		add_settings_section( 'a8c_developer_settings', esc_html__( 'Settings', 'a8c-developer' ), array( &$this, 'settings_section_settings' ), $this->settings_page_slug . '_status' );
+		add_settings_field( 'a8c_developer_setting_permalink_structure', esc_html__( 'Pretty Permalinks', 'a8c-developer' ), array( &$this, 'settings_field_setting_permalink_structure' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
+
 
 
 		# Add more sections and fields here as needed
@@ -194,33 +199,46 @@ class Automattic_Developer {
 	}
 
 	public function settings_section_plugins() {
-		echo '<p>' . __( 'We recommend you have the following plugins installed:', 'a8c-developer' ) . '</p>';
+		echo '<p>' . esc_html__( 'We recommend you have the following plugins installed:', 'a8c-developer' ) . '</p>';
 	}
 
 	// TODO: Make this not shitty
 	public function settings_field_plugin( $args ) {
 		if ( $args['active'] ) {
-			echo '<span style="font-weight:bold;color:green;">' . __( 'ACTIVE', 'a8c-developer' ) . '</span>';
+			echo '<span style="font-weight:bold;color:green;">' . esc_html__( 'ACTIVE', 'a8c-developer' ) . '</span>';
 		} else {
 			// TODO: Enable if already installed but just disabled
-			echo '<a style="font-weight:bold;color:darkred;" href="' . wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) . '" title="' . __( 'Click here to install', 'a8c-developer' ) . '">' . __( 'INACTIVE', 'a8c-developer' ) . '</a>';
+			echo '<a style="font-weight:bold;color:darkred;" href="' . wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) . '" title="' . esc_html__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
 		}
 	}
 
 	public function settings_section_constants() {
-		echo '<p>' . sprintf( __( 'We also recommend you set the following constants to <code>true</code> in your <code>wp-config.php</code> file. <a href="%s" target="_blank">Need help?</a>', 'a8c-developer' ), 'http://codex.wordpress.org/Editing_wp-config.php' ) . '</p>';
+		echo '<p>' . sprintf( __( 'We recommend you set the following constants to <code>true</code> in your <code>wp-config.php</code> file. <a href="%s" target="_blank">Need help?</a>', 'a8c-developer' ), 'http://codex.wordpress.org/Editing_wp-config.php' ) . '</p>';
 	}
 
 	// TODO: Make this not shitty
 	public function settings_field_constant( $args ) {
 		if ( defined( $args['constant'] ) && constant( $args['constant'] ) ) {
-			echo '<span style="font-weight:bold;color:green;">' . __( 'SET', 'a8c-developer' ) . '</span>';
+			echo '<span style="font-weight:bold;color:green;">' . esc_html__( 'SET', 'a8c-developer' ) . '</span>';
 		} else {
-			echo '<span style="font-weight:bold;color:darkred;">' . __( 'NOT SET', 'a8c-developer' ) . '</span>';
+			echo '<span style="font-weight:bold;color:darkred;">' . esc_html__( 'NOT SET', 'a8c-developer' ) . '</span>';
 		}
 
 		if ( ! empty( $args['description'] ) )
 			echo '<br /><span class="description">' . $args['description'] . '</span>';
+	}
+
+
+	public function settings_section_settings() {
+		echo '<p>' . esc_html__( 'We recommend the following settings and configurations.', 'a8c-developer' ) . '</p>';
+	}
+
+	public function settings_field_setting_permalink_structure() {
+		if ( get_option( 'permalink_structure' ) ) {
+			echo '<span style="font-weight:bold;color:green;">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
+		} else {
+			echo '<a style="font-weight:bold;color:darkred;" href="' . admin_url( 'options-permalink.php' ) . '">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a> ' . __( '<a href="http://codex.wordpress.org/Using_Permalinks" target="_blank">Need help?</a>', 'a8c-developer' );
+		}
 	}
 
 	public function settings_validate( $raw_settings ) {
