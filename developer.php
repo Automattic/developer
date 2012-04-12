@@ -51,11 +51,11 @@ class Automattic_Developer {
 
 		$this->recommended_plugins = array(
 			'debug-bar' => array(
-				'name'   => __( 'Debug Bar', 'a8c-developer' ),
+				'name'   => esc_html__( 'Debug Bar', 'a8c-developer' ),
 				'active' => class_exists( 'Debug_Bar' ),
 			),
 			'log-deprecated-notices' => array(
-				'name'   => __( 'Log Deprecated Notices', 'a8c-developer' ),
+				'name'   => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
 				'active' => class_exists( 'Deprecated_Log' ),
 			),
 			'foobar' => array(
@@ -64,6 +64,18 @@ class Automattic_Developer {
 			),
 			// TODO: Add more?
 		);
+
+		if ( 'wpcom-vip' == $this->settings['project_type'] ) {
+			$this->recommended_plugins['jetpack'] = array(
+				'name'   => esc_html__( 'Jetpack', 'a8c-developer' ),
+				'active' => class_exists( 'Jetpack' ),
+			);
+			$this->recommended_plugins['polldaddy'] = array(
+				'name'   => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
+				'active' => class_exists( 'WP_Polldaddy' ),
+			);
+
+		}
 
 		$this->recommended_constants = array(
 			'WP_DEBUG'    => sprintf( __( 'Enables <a href="%s" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' ), 'http://codex.wordpress.org/Debugging_in_WordPress' ),
