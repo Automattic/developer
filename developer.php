@@ -114,10 +114,10 @@ class Automattic_Developer {
 		add_settings_section( 'a8c_developer_main', esc_html__( 'Main Configuration', 'a8c-developer' ), '__return_false', $this->settings_page_slug . '_settings' );
 		add_settings_field( 'a8c_developer_project_type', esc_html__( 'Project Type', 'a8c-developer' ), array( &$this, 'settings_field_select' ), $this->settings_page_slug . '_settings', 'a8c_developer_main', array(
 			'name'        => 'project_type',
-			'description' => esc_html__( 'Are you developing for a site to be hosted on WordPress.com or somewhere else?', 'a8c-developer' ),
+			'description' => __( 'Are you developing plugins and themes for <a href="http://wordpress.org/">self-hosted blogs</a> or are you working on a <a href="http://vip.wordpess.com/">WordPress.com VIP</a> project?', 'a8c-developer' ),
 			'options'     => array(
-				'wpcom' => esc_html__( 'WordPress.com', 'a8c-developer' ),
-				'wporg' => esc_html__( 'Somewhere else (WordPress.org)', 'a8c-developer' ),
+				'wporg' => esc_html__( 'WordPress.org', 'a8c-developer' ),
+				'wpcom-vip' => esc_html__( 'WordPress.com VIP', 'a8c-developer' ),
 			),
 		) );
 
