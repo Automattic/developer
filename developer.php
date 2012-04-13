@@ -104,6 +104,10 @@ class Automattic_Developer {
 				'name'   => esc_html__( 'Debug Bar', 'a8c-developer' ),
 				'active' => class_exists( 'Debug_Bar' ),
 			),
+			'debug-bar-cron' => array(
+				'name'   => esc_html__( 'Debug Bar Cron', 'a8c-developer' ),
+				'active' => function_exists( 'zt_add_debug_bar_cron_panel' ),
+			),
 			'log-deprecated-notices' => array(
 				'name'   => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
 				'active' => class_exists( 'Deprecated_Log' ),
