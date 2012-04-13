@@ -113,8 +113,9 @@ class Automattic_Developer {
 				'active' => class_exists( 'Deprecated_Log' ),
 			),
 			'foobar' => array(
-				'name'   => 'Dummy Test Plugin',
-				'active' => false,
+				'name'     => 'Dummy Test Plugin',
+				'active'   => false,
+				'filename' => 'blah.php',
 			),
 			// TODO: Add more?
 		);
@@ -213,8 +214,17 @@ class Automattic_Developer {
 		if ( $args['active'] ) {
 			echo '<span style="font-weight:bold;color:green;">' . esc_html__( 'ACTIVE', 'a8c-developer' ) . '</span>';
 		} else {
-			// TODO: Enable if already installed but just disabled
-			echo '<a style="font-weight:bold;color:darkred;" href="' . wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) . '" title="' . esc_html__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
+			$filename = ( ! empty( $args['filename'] ) ) ? $args['filename'] : $args['slug'] . '.php';
+			$plugin_file = WP_PLUGIN_DIR . '/' . $args['slug'] . '/' . $filename;
+
+			if ( file_exists( $plugin_file ) ) {
+				// Installed but not activated
+				$rel_path = $args['slug'] . '/' . $filename;
+				echo '<a style="font-weight:bold;color:darkred;" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $rel_path ), 'activate-plugin_' . $rel_path ) ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
+			} else {
+				// Needs to be installed
+				echo '<a style="font-weight:bold;color:darkred;" href="' . esc_url( wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) ) . '" title="' . esc_attr__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</a>';
+			}
 		}
 	}
 
