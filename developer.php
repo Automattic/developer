@@ -116,10 +116,12 @@ class Automattic_Developer {
 		);
 
 		if ( 'wpcom-vip' == $this->settings['project_type'] ) {
+			/*
 			$recommended_plugins['jetpack'] = array(
 				'name'   => esc_html__( 'Jetpack', 'a8c-developer' ),
 				'active' => class_exists( 'Jetpack' ),
 			);
+			*/
 			$recommended_plugins['polldaddy'] = array(
 				'name'   => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
 				'active' => class_exists( 'WP_Polldaddy' ),
