@@ -215,9 +215,8 @@ class Automattic_Developer {
 			echo '<span style="font-weight:bold;color:green;">' . esc_html__( 'ACTIVE', 'a8c-developer' ) . '</span>';
 		} else {
 			$filename = ( ! empty( $args['filename'] ) ) ? $args['filename'] : $args['slug'] . '.php';
-			$plugin_file = WP_PLUGIN_DIR . '/' . $args['slug'] . '/' . $filename;
 
-			if ( file_exists( $plugin_file ) ) {
+			if ( file_exists( WP_PLUGIN_DIR . '/' . $args['slug'] . '/' . $filename ) ) {
 				// Installed but not activated
 				$rel_path = $args['slug'] . '/' . $filename;
 				echo '<a style="font-weight:bold;color:darkred;" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $rel_path ), 'activate-plugin_' . $rel_path ) ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
