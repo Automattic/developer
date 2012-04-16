@@ -127,11 +127,14 @@ class Automattic_Developer {
 				'active' => class_exists( 'Jetpack' ),
 			);
 			*/
+			$recommended_plugins['grunion-contact-form'] = array(
+				'name'   => esc_html__( 'Grunion Contact Form', 'a8c-developer' ),
+				'active' => defined( 'GRUNION_PLUGIN_DIR' ),
+			);
 			$recommended_plugins['polldaddy'] = array(
 				'name'   => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
 				'active' => class_exists( 'WP_Polldaddy' ),
 			);
-
 		}
 
 		foreach ( $recommended_plugins as $plugin_slug => $plugin_details ) {
