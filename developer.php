@@ -5,7 +5,7 @@
 Plugin Name:  Developer
 Plugin URI:   http://wordpress.org/extend/plugins/developer/
 Description:  The first stop for every WordPress developer
-Version:      0.1
+Version:      1.0.0
 Author:       Automattic
 Author URI:   http://automattic.com/wordpress-plugins/
 License:      GPLv2 or later
@@ -23,7 +23,6 @@ class Automattic_Developer {
 	// Using "private" for read-only functionality. See __get().
 	private $option_name               = 'a8c_developer';
 	private $settings_page_slug        = 'a8c_developer';
-	private $settings_page_hook_suffix = false;
 
 	function __construct() {
 		add_action( 'init',           array( &$this, 'init' ) );
@@ -44,19 +43,24 @@ class Automattic_Developer {
 			'project_type' => false,
 		);
 
+		//delete_option( $this->option_name );
+
 		$this->settings = wp_parse_args( (array) get_option( $this->option_name ), $this->default_settings );
 	}
 
 	public function admin_init() {
 		register_setting( $this->option_name, $this->option_name, array( &$this, 'settings_validate' ) );
 
+		wp_register_style( 'a8c-developer', plugins_url( 'developer.css', __FILE__ ), array(), '1.0.0' );
+
 		if ( ! get_option( $this->option_name ) ) {
-			add_action( 'admin_notices', array( &$this, 'admin_notices_setup_nag' ) );
+			add_action( 'admin_enqueue_scripts', array( &$this, 'load_colorbox' ) );
+			add_action( 'admin_footer', array( &$this, 'output_setup_box_html' ) );
 		}
 	}
 
 	public function register_settings_page() {
-		$this->settings_page_hook_suffix = add_options_page( esc_html__( 'Automattic Developer Helper', 'a8c-developer' ), esc_html__( 'Developer', 'a8c-developer' ), 'manage_options', $this->settings_page_slug, array( &$this, 'settings_page' ) );
+		add_options_page( esc_html__( 'Automattic Developer Helper', 'a8c-developer' ), esc_html__( 'Developer', 'a8c-developer' ), 'manage_options', $this->settings_page_slug, array( &$this, 'settings_page' ) );
 	}
 
 	public function add_node_to_admin_bar( $wp_admin_bar ) {
@@ -71,18 +75,58 @@ class Automattic_Developer {
 		) );
 	}
 
-	public function admin_notices_setup_nag() {
-		global $parent_file, $hook_suffix;
+	public function load_colorbox() {
+		wp_enqueue_script( 'colorbox', plugins_url( 'colorbox/jquery.colorbox-min.js', __FILE__ ), array( 'jquery' ), '1.3.19' );
+		wp_enqueue_style( 'a8c-developer-colorbox', plugins_url( 'colorbox/colorbox.css', __FILE__ ), array(), '1.3.19' );
+		wp_enqueue_style( 'a8c-developer' );
+	}
 
-		// Don't do anything on this plugin's settings page
-		if ( $this->settings_page_hook_suffix == $hook_suffix )
-			return;
+	public function output_setup_box_html() { ?>
 
-		add_settings_error( $this->option_name, $this->option_name. '_not_set_up', sprintf( __( 'Please <a href="%s">configure the development plugin</a>. TODO: Copy.', 'a8c-developer' ), admin_url( 'options-general.php?page=' . $this->settings_page_slug ) ) );
+		<div style="display:none">
+			<div id="a8c-developer-setup-dialog-step-1" class="a8c-developer-dialog">
+				<p><em>TODO: Copy+formatting+i18n</em></p>
 
-		// Avoid a double message
-		if ( 'options-general.php' != $parent_file )
-			settings_errors( $this->option_name );
+				<strong>Thanks for installing Automattic's Developer helper plugin!</strong>
+
+				<p>Before we begin, what type of website are you developing?</p>
+
+				<form id="a8c-developer-setup-dialog-step-1-form" action="#somewhere">
+					<!-- todo: make not crap -->
+					<p><label><input type="radio" name="a8c_developer_project_type" value="wporg" checked="checked" /> A normal WordPress.org website</label></p>
+					<p><label><input type="radio" name="a8c_developer_project_type" value="wpcom-vip" /> A website hosted on WordPress.com VIP</label></p>
+
+					<?php submit_button( null, 'primary', 'a8c-developer-setup-dialog-step-1-submit' ); ?>
+				</form>
+			</div>
+			<div id="a8c-developer-setup-dialog-step-2" class="a8c-developer-dialog">
+
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			jQuery(document).ready(function($){
+				$.colorbox({
+					inline: true,
+					href: '#a8c-developer-setup-dialog-step-1',
+					title: 'Developer: Plugin Setup',
+					innerWidth: 500,
+					transition: 'none', // No animation to show it
+
+					internetexplorer: 'sucks' // TODO: Remove this temporary item preventing me from breaking IE with a trailing comma
+				});
+
+				$('#a8c-developer-setup-dialog-step-1-form').submit(function(e){
+					$('#a8c-developer-setup-dialog-step-1-submit').val('Saving...');
+
+					// Save form via AJAX here, then load step 2
+
+					e.preventDefault();
+				});
+			});
+		</script>
+
+<?php
 	}
 
 	public function settings_page() {
