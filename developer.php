@@ -25,12 +25,13 @@ class Automattic_Developer {
 	private $settings_page_slug        = 'a8c_developer';
 
 	function __construct() {
-		add_action( 'init',           array( &$this, 'init' ) );
-		add_action( 'admin_init',     array( &$this, 'admin_init' ) );
+		add_action( 'init',                           array( &$this, 'init' ) );
+		add_action( 'admin_init',                     array( &$this, 'admin_init' ) );
 
-		add_action( 'admin_menu',     array( &$this, 'register_settings_page' ) );
+		add_action( 'wp_ajax_a8c_developer',          array( &$this, 'ajax_callback' ) );
 
-		add_action( 'admin_bar_menu', array( &$this, 'add_node_to_admin_bar' ) );
+		add_action( 'admin_menu',                     array( &$this, 'register_settings_page' ) );
+		add_action( 'admin_bar_menu',                 array( &$this, 'add_node_to_admin_bar' ) );
 	}
 
 	// Allows private variables to be read. Basically implements read-only variables.
@@ -43,7 +44,9 @@ class Automattic_Developer {
 			'project_type' => false,
 		);
 
-		//delete_option( $this->option_name );
+		// TODO: Delete this dev-only code
+		if ( ! empty( $_GET['a8c_developer_reset'] ) )
+			delete_option( $this->option_name );
 
 		$this->settings = wp_parse_args( (array) get_option( $this->option_name ), $this->default_settings );
 	}
@@ -53,8 +56,22 @@ class Automattic_Developer {
 
 		wp_register_style( 'a8c-developer', plugins_url( 'developer.css', __FILE__ ), array(), '1.0.0' );
 
+		// Handle the submission of the lightbox form if step 2 won't be shown
+		if ( ! empty( $_POST['a8c_developer_action'] ) ) {
+			if ( 'lightbox_step_1' == $_POST['a8c_developer_action'] && ! empty( $_POST['a8c_developer_project_type'] ) && check_admin_referer( 'a8c_developer_action_lightbox_step_1' ) ) {
+				$settings = $this->settings;
+				$settings['project_type'] = $_POST['a8c_developer_project_type'];
+
+				$this->settings = $this->settings_validate( $settings );
+
+				update_option( $this->option_name, $this->settings );
+
+				add_settings_error( 'general', 'settings_updated', __( 'Settings saved.' ), 'updated' );
+			}
+		}
+
 		if ( ! get_option( $this->option_name ) ) {
-			add_action( 'admin_enqueue_scripts', array( &$this, 'load_colorbox' ) );
+			add_action( 'admin_enqueue_scripts', array( &$this, 'load_lightbox_script_and_styles' ) );
 			add_action( 'admin_footer', array( &$this, 'output_setup_box_html' ) );
 		}
 	}
@@ -75,7 +92,7 @@ class Automattic_Developer {
 		) );
 	}
 
-	public function load_colorbox() {
+	public function load_lightbox_script_and_styles() {
 		wp_enqueue_script( 'colorbox', plugins_url( 'colorbox/jquery.colorbox-min.js', __FILE__ ), array( 'jquery' ), '1.3.19' );
 		wp_enqueue_style( 'a8c-developer-colorbox', plugins_url( 'colorbox/colorbox.css', __FILE__ ), array(), '1.3.19' );
 		wp_enqueue_style( 'a8c-developer' );
@@ -91,8 +108,11 @@ class Automattic_Developer {
 
 				<p>Before we begin, what type of website are you developing?</p>
 
-				<form id="a8c-developer-setup-dialog-step-1-form" action="#somewhere">
-					<!-- todo: make not crap -->
+				<form id="a8c-developer-setup-dialog-step-1-form" action="options-general.php?page=a8c_developer" method="post">
+					<?php wp_nonce_field( 'a8c_developer_action_lightbox_step_1' ); ?> 
+					<input type="hidden" name="action" value="a8c_developer" />
+					<input type="hidden" name="a8c_developer_action" value="lightbox_step_1" />
+
 					<p><label><input type="radio" name="a8c_developer_project_type" value="wporg" checked="checked" /> A normal WordPress.org website</label></p>
 					<p><label><input type="radio" name="a8c_developer_project_type" value="wpcom-vip" /> A website hosted on WordPress.com VIP</label></p>
 
@@ -100,33 +120,51 @@ class Automattic_Developer {
 				</form>
 			</div>
 			<div id="a8c-developer-setup-dialog-step-2" class="a8c-developer-dialog">
-
+				This is some new content
 			</div>
 		</div>
 
 		<script type="text/javascript">
 			jQuery(document).ready(function($){
-				$.colorbox({
-					inline: true,
-					href: '#a8c-developer-setup-dialog-step-1',
-					title: 'Developer: Plugin Setup',
-					innerWidth: 500,
-					transition: 'none', // No animation to show it
+				function make_colorbox( href, transition ) {
+					$.colorbox({
+						inline: true,
+						href: href,
+						title: '<?php echo esc_js( __( 'Developer: Plugin Setup' ) ); ?>',
+						innerWidth: 500,
+						maxHeight: '100%',
+						transition: transition,
 
-					internetexplorer: 'sucks' // TODO: Remove this temporary item preventing me from breaking IE with a trailing comma
-				});
+						internetexplorer: 'sucks' // TODO: Remove this temporary item preventing me from breaking IE with a trailing comma
+					});
+				}
 
-				$('#a8c-developer-setup-dialog-step-1-form').submit(function(e){
-					$('#a8c-developer-setup-dialog-step-1-submit').val('Saving...');
+				make_colorbox( '#a8c-developer-setup-dialog-step-1', 'none' );
 
-					// Save form via AJAX here, then load step 2
+				$('#a8c-developer-setup-dialog-step-1-form').submit( function(e) {
+					// Only go to lightbox step 2 if we can install plugins directly
+					if ( 'direct' != '<?php echo esc_js( get_filesystem_method() ); ?>' )
+						return;
 
 					e.preventDefault();
+
+					$('#a8c-developer-setup-dialog-step-1-submit').val('Saving...');
+
+					$.post( ajaxurl, $(this).serialize(), function( result ) {
+						$('#a8c-developer-setup-dialog-step-2').html( result );
+						make_colorbox( '#a8c-developer-setup-dialog-step-2' );
+					});
 				});
 			});
 		</script>
 
 <?php
+	}
+
+	public function ajax_callback() {
+		var_dump( get_filesystem_method() );
+		var_dump( $_POST );
+		exit();
 	}
 
 	public function settings_page() {
@@ -228,8 +266,11 @@ class Automattic_Developer {
 			<?php do_settings_sections( $this->settings_page_slug . '_status' ); ?>
 		</form>
 
+		<!-- TODO: remove this dev-only stuff -->
 		<h3 style="margin-top:150px">Current Settings Value:</h3>
 		<?php var_dump( get_option( $this->option_name ) ); ?>
+		<a href="<?php echo esc_url( add_query_arg( 'a8c_developer_reset', 1 ) ); ?>">Delete settings and start over</a>
+
 
 		</div>
 <?php
