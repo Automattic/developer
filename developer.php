@@ -73,7 +73,7 @@ class Automattic_Developer {
 				'name'   => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
 				'active' => class_exists( 'Deprecated_Log' ),
 			),
-			//*
+			/*
 			'jetpack' => array(
 				'project_type' => 'wpcom-vip',
 				'name'   => esc_html__( 'Jetpack', 'a8c-developer' ),
