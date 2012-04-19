@@ -17,21 +17,26 @@ Domain Path:  /languages/
 
 class Automattic_Developer {
 
-	public $settings                   = array();
-	public $default_settings           = array();
+	public $settings               = array();
+	public $default_settings       = array();
 
 	// Using "private" for read-only functionality. See __get().
-	private $option_name               = 'a8c_developer';
-	private $settings_page_slug        = 'a8c_developer';
+	private $option_name           = 'a8c_developer';
+	private $settings_page_slug    = 'a8c_developer';
+
+	private $recommended_plugins   = array();
+	private $recommended_constants = array();
 
 	function __construct() {
-		add_action( 'init',                           array( &$this, 'init' ) );
-		add_action( 'admin_init',                     array( &$this, 'admin_init' ) );
+		add_action( 'init',           array( &$this, 'init' ) );
+		add_action( 'admin_init',     array( &$this, 'admin_init' ) );
 
-		add_action( 'wp_ajax_a8c_developer',          array( &$this, 'ajax_callback' ) );
+		add_action( 'admin_menu',     array( &$this, 'register_settings_page' ) );
+		add_action( 'admin_bar_menu', array( &$this, 'add_node_to_admin_bar' ) );
 
-		add_action( 'admin_menu',                     array( &$this, 'register_settings_page' ) );
-		add_action( 'admin_bar_menu',                 array( &$this, 'add_node_to_admin_bar' ) );
+		add_action( 'wp_ajax_a8c_developer_lightbox_step_1',  array( &$this, 'ajax_handler' ) );
+		add_action( 'wp_ajax_a8c_developer_install_plugin',   array( &$this, 'ajax_handler' ) );
+		add_action( 'wp_ajax_a8c_developer_activate_plugin',  array( &$this, 'ajax_handler' ) );
 	}
 
 	// Allows private variables to be read. Basically implements read-only variables.
@@ -52,6 +57,55 @@ class Automattic_Developer {
 	}
 
 	public function admin_init() {
+		$this->recommended_plugins = array(
+			'debug-bar' => array(
+				'project_type' => 'all',
+				'name'         => esc_html__( 'Debug Bar', 'a8c-developer' ),
+				'active'       => class_exists( 'Debug_Bar' ),
+			),
+			'debug-bar-cron' => array(
+				'project_type' => 'all',
+				'name'   => esc_html__( 'Debug Bar Cron', 'a8c-developer' ),
+				'active' => function_exists( 'zt_add_debug_bar_cron_panel' ),
+			),
+			'log-deprecated-notices' => array(
+				'project_type' => 'all',
+				'name'   => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
+				'active' => class_exists( 'Deprecated_Log' ),
+			),
+			//*
+			'jetpack' => array(
+				'project_type' => 'wpcom-vip',
+				'name'   => esc_html__( 'Jetpack', 'a8c-developer' ),
+				'active' => class_exists( 'Jetpack' ),
+			),
+			/**/
+			'grunion-contact-form' => array(
+				'project_type' => 'wpcom-vip',
+				'name'   => esc_html__( 'Grunion Contact Form', 'a8c-developer' ),
+				'active' => defined( 'GRUNION_PLUGIN_DIR' ),
+			),
+			'polldaddy' => array(
+				'project_type' => 'wpcom-vip',
+				'name'   => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
+				'active' => class_exists( 'WP_Polldaddy' ),
+			),
+			/*
+			'foobar' => array(
+				'name'     => 'Dummy Test Plugin',
+				'active'   => false,
+				'filename' => 'blah.php',
+			),
+			/**/
+			// TODO: Add more?
+		);
+
+		$this->recommended_constants = array(
+			'WP_DEBUG'    => __( 'Enables <a href="http://codex.wordpress.org/Debugging_in_WordPress" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' ),
+			'SAVEQUERIES' => esc_html__( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' ),
+			'FOOBAR'      => 'A dummy constant for showing a missing constant',
+		);
+
 		register_setting( $this->option_name, $this->option_name, array( &$this, 'settings_validate' ) );
 
 		wp_register_style( 'a8c-developer', plugins_url( 'developer.css', __FILE__ ), array(), '1.0.0' );
@@ -59,20 +113,19 @@ class Automattic_Developer {
 		// Handle the submission of the lightbox form if step 2 won't be shown
 		if ( ! empty( $_POST['a8c_developer_action'] ) ) {
 			if ( 'lightbox_step_1' == $_POST['a8c_developer_action'] && ! empty( $_POST['a8c_developer_project_type'] ) && check_admin_referer( 'a8c_developer_action_lightbox_step_1' ) ) {
-				$settings = $this->settings;
-				$settings['project_type'] = $_POST['a8c_developer_project_type'];
-
-				$this->settings = $this->settings_validate( $settings );
-
-				update_option( $this->option_name, $this->settings );
+				$this->save_project_type( $_POST['a8c_developer_project_type'] );
 
 				add_settings_error( 'general', 'settings_updated', __( 'Settings saved.' ), 'updated' );
 			}
 		}
 
 		if ( ! get_option( $this->option_name ) ) {
-			add_action( 'admin_enqueue_scripts', array( &$this, 'load_lightbox_script_and_styles' ) );
-			add_action( 'admin_footer', array( &$this, 'output_setup_box_html' ) );
+			if ( ! empty( $_GET['a8cdev_errorsaving'] ) ) {
+				add_settings_error( $this->settings_page_slug, $this->settings_page_slug . '_error_saving', __( 'Error saving settings. Please try again.', 'a8c-developer' ) );
+			} elseif ( current_user_can( 'manage_options' ) ) {
+				add_action( 'admin_enqueue_scripts', array( &$this, 'load_lightbox_script_and_styles' ) );
+				add_action( 'admin_footer', array( &$this, 'output_setup_box_html' ) );
+			}
 		}
 	}
 
@@ -109,9 +162,8 @@ class Automattic_Developer {
 				<p>Before we begin, what type of website are you developing?</p>
 
 				<form id="a8c-developer-setup-dialog-step-1-form" action="options-general.php?page=a8c_developer" method="post">
-					<?php wp_nonce_field( 'a8c_developer_action_lightbox_step_1' ); ?> 
-					<input type="hidden" name="action" value="a8c_developer" />
-					<input type="hidden" name="a8c_developer_action" value="lightbox_step_1" />
+					<?php wp_nonce_field( 'a8c_developer_lightbox_step_1' ); ?> 
+					<input type="hidden" name="action" value="a8c_developer_lightbox_step_1" />
 
 					<p><label><input type="radio" name="a8c_developer_project_type" value="wporg" checked="checked" /> A normal WordPress.org website</label></p>
 					<p><label><input type="radio" name="a8c_developer_project_type" value="wpcom-vip" /> A website hosted on WordPress.com VIP</label></p>
@@ -120,7 +172,7 @@ class Automattic_Developer {
 				</form>
 			</div>
 			<div id="a8c-developer-setup-dialog-step-2" class="a8c-developer-dialog">
-				This is some new content
+				<!-- This gets populated via AJAX -->
 			</div>
 		</div>
 
@@ -142,18 +194,35 @@ class Automattic_Developer {
 				make_colorbox( '#a8c-developer-setup-dialog-step-1', 'none' );
 
 				$('#a8c-developer-setup-dialog-step-1-form').submit( function(e) {
-					// Only go to lightbox step 2 if we can install plugins directly
-					if ( 'direct' != '<?php echo esc_js( get_filesystem_method() ); ?>' )
+					var form = this;
+
+					$('#a8c-developer-setup-dialog-step-1-submit').val('Saving...');
+
+					// This is controlled from within PHP
+					// Aborts going on to show step 2 if it doesn't apply
+					if ( <?php echo ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) || 'direct' != get_filesystem_method() ) ? 'true' : 'false'; ?> )
 						return;
 
 					e.preventDefault();
 
-					$('#a8c-developer-setup-dialog-step-1-submit').val('Saving...');
+					$.post( ajaxurl, $(form).serialize() )
+						.success( function( result ) {
+							// If there was an error with the AJAX save, then do a normal POST
+							if ( '-1' == result ) {
+								return;
+							}
 
-					$.post( ajaxurl, $(this).serialize(), function( result ) {
-						$('#a8c-developer-setup-dialog-step-2').html( result );
-						make_colorbox( '#a8c-developer-setup-dialog-step-2' );
-					});
+							// AJAX says no step 2 needed, so head to the settings page
+							if ( 'redirect' == result ) {
+								location.href = 'options-general.php?page=<?php echo esc_js( $this->settings_page_slug ); ?>&updated=1';
+								return;
+							}
+
+							// Display the AJAX reponse
+							$('#a8c-developer-setup-dialog-step-2').html( result );
+							make_colorbox( '#a8c-developer-setup-dialog-step-2' );
+						})
+					;
 				});
 			});
 		</script>
@@ -161,10 +230,165 @@ class Automattic_Developer {
 <?php
 	}
 
-	public function ajax_callback() {
-		var_dump( get_filesystem_method() );
-		var_dump( $_POST );
-		exit();
+	public function ajax_handler( $action ) {
+		switch ( $action ) {
+
+			case 'a8c_developer_lightbox_step_1':
+				check_ajax_referer( 'a8c_developer_lightbox_step_1' );
+
+				if ( empty( $_POST['a8c_developer_project_type'] ) )
+					die( '-1' );
+
+				$this->save_project_type( $_POST['a8c_developer_project_type'] );
+
+				$to_install_or_enable = 0;
+
+				foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
+					if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
+						continue;
+
+					if ( ! $plugin_details['active'] ) {
+						$to_install_or_enable++;
+					}
+				}
+
+				// If no plugins to take action on, head to the settings page
+				if ( ! $to_install_or_enable )
+					die( 'redirect' );
+
+				echo '<strong>Plugins</strong>';
+
+				echo '<p>We recommend that you also install and activate the following plugins:</p>';
+
+				echo '<ul>';
+
+					foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
+						if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
+							continue;
+
+						if ( $plugin_details['active'] )
+							continue;
+
+						if ( $this->is_recommended_plugin_installed( $plugin_slug ) ) {
+							$path = $this->get_path_for_recommended_plugin( $plugin_slug );
+							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c_developer_button_activate" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '">Activate</button></li>';
+						} else {
+							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c_developer_button_install" data-pluginslug="' . esc_attr( $plugin_slug ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_install_plugin_' . $plugin_slug ) . '">Install</button></li>';
+						}
+					}
+
+				echo '</ul>';
+
+?>
+
+				<script type="text/javascript">
+					(function($){
+						$('.a8c_developer_button_install').click( function() {
+							var button = this;
+
+							$(button).html('<img src="images/loading.gif" alt="" /> Installing...');
+
+							$.post( ajaxurl, {
+								'action': 'a8c_developer_install_plugin',
+								'_ajax_nonce': $(button).attr('data-nonce'),
+								'plugin_slug': $(button).attr('data-pluginslug')
+							} )
+								.success( function( result ) {
+									if ( '1' == result ) {
+										$(button).html('Installed');
+										$(button).unbind('click').prop('disabled', true);
+									} else {
+										$(button).html('Error!');
+									}
+								})
+								.error( function() {
+									$(button).html('Error!');
+								})
+							;
+						});
+
+						$('.a8c_developer_button_activate').click( function() {
+							var button = this;
+
+							$(button).html('<img src="images/loading.gif" alt="" /> Activating...');
+
+							$.post( ajaxurl, {
+								'action': 'a8c_developer_activate_plugin',
+								'_ajax_nonce': $(button).attr('data-nonce'),
+								'path': $(button).attr('data-path')
+							} )
+								.success( function( result ) {
+									if ( '1' == result ) {
+										$(button).html('Activated');
+										$(button).unbind('click').prop('disabled', true);
+									} else {
+										$(button).html('Error!');
+									}
+								})
+								.error( function() {
+									$(button).html('Error!');
+								})
+							;
+						});
+					})(jQuery);
+				</script>
+<?php
+
+				exit();
+
+			case 'a8c_developer_install_plugin':
+				if ( empty( $_POST['plugin_slug'] ) )
+					die( '-1' );
+
+				check_ajax_referer( 'a8c_developer_install_plugin_' . $_POST['plugin_slug'] );
+
+				if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) )
+					die( '-1' );
+
+				include_once ( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+
+				$api = plugins_api( 'plugin_information', array( 'slug' => $_POST['plugin_slug'], 'fields' => array( 'sections' => false ) ) );
+
+				if ( is_wp_error( $api ) )
+					die( '-1' );
+
+				$upgrader = new Plugin_Upgrader( new Automattic_Developer_Empty_Upgrader_Skin( array(
+					'nonce'  => 'install-plugin_' . $_POST['plugin_slug'],
+					'plugin' => $_POST['plugin_slug'],
+					'api'    => $api,
+				) ) );
+
+				$install_result = $upgrader->install( $api->download_link );
+
+				if ( ! $install_result || is_wp_error( $install_result ) )
+					die( '-1' );
+
+				$activate_result = activate_plugin( $this->get_path_for_recommended_plugin( $_POST['plugin_slug'] ) );
+
+				if ( is_wp_error( $activate_result ) )
+					die( '-1' );
+
+				exit( '1' );
+
+			case 'a8c_developer_activate_plugin':
+				if ( empty( $_POST['path'] ) )
+					die( '-1' );
+
+				check_ajax_referer( 'a8c_developer_activate_plugin_' . $_POST['path'] );
+
+				if ( ! current_user_can( 'activate_plugins' ) )
+					die( '-1' );
+
+				$activate_result = activate_plugin( $_POST['path'] );
+
+				if ( is_wp_error( $activate_result ) )
+					die( '-1' );
+
+				exit( '1' );
+		}
+
+		// Unknown action
+		die( '-1' );
 	}
 
 	public function settings_page() {
@@ -178,68 +402,23 @@ class Automattic_Developer {
 			),
 		) );
 
-
+		// TODO: Refactor this allow AJAX
 		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( &$this, 'settings_section_plugins' ), $this->settings_page_slug . '_status' );
+		foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
+			if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
+				continue;
 
-		$recommended_plugins = array(
-			'debug-bar' => array(
-				'name'   => esc_html__( 'Debug Bar', 'a8c-developer' ),
-				'active' => class_exists( 'Debug_Bar' ),
-			),
-			'debug-bar-cron' => array(
-				'name'   => esc_html__( 'Debug Bar Cron', 'a8c-developer' ),
-				'active' => function_exists( 'zt_add_debug_bar_cron_panel' ),
-			),
-			'log-deprecated-notices' => array(
-				'name'   => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
-				'active' => class_exists( 'Deprecated_Log' ),
-			),
-			'foobar' => array(
-				'name'     => 'Dummy Test Plugin',
-				'active'   => false,
-				'filename' => 'blah.php',
-			),
-			// TODO: Add more?
-		);
-
-		if ( 'wpcom-vip' == $this->settings['project_type'] ) {
-			/*
-			$recommended_plugins['jetpack'] = array(
-				'name'   => esc_html__( 'Jetpack', 'a8c-developer' ),
-				'active' => class_exists( 'Jetpack' ),
-			);
-			*/
-			$recommended_plugins['grunion-contact-form'] = array(
-				'name'   => esc_html__( 'Grunion Contact Form', 'a8c-developer' ),
-				'active' => defined( 'GRUNION_PLUGIN_DIR' ),
-			);
-			$recommended_plugins['polldaddy'] = array(
-				'name'   => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
-				'active' => class_exists( 'WP_Polldaddy' ),
-			);
-		}
-
-		foreach ( $recommended_plugins as $plugin_slug => $plugin_details ) {
 			$plugin_details = array_merge( array( 'slug' => $plugin_slug ), $plugin_details );
 			add_settings_field( 'a8c_developer_plugin_' . $plugin_slug, $plugin_details['name'], array( &$this, 'settings_field_plugin' ), $this->settings_page_slug . '_status', 'a8c_developer_plugins', $plugin_details );
 		}
 
-
 		add_settings_section( 'a8c_developer_constants', esc_html__( 'Constants', 'a8c-developer' ), array( &$this, 'settings_section_constants' ), $this->settings_page_slug . '_status' );
-
-		$recommended_constants = array(
-			'WP_DEBUG'    => __( 'Enables <a href="http://codex.wordpress.org/Debugging_in_WordPress" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' ),
-			'SAVEQUERIES' => esc_html__( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' ),
-			'FOOBAR'      => 'A dummy constant for showing a missing constant',
-		);
-
-		foreach ( $recommended_constants as $constant => $description ) {
+		foreach ( $this->recommended_constants as $constant => $description ) {
 			add_settings_field( 'a8c_developer_constant_' . $constant, $constant, array( &$this, 'settings_field_constant' ), $this->settings_page_slug . '_status', 'a8c_developer_constants', array(
 				'constant'    => $constant,
 				'description' => $description,
 			) );
 		}
-
 
 		add_settings_section( 'a8c_developer_settings', esc_html__( 'Settings', 'a8c-developer' ), array( &$this, 'settings_section_settings' ), $this->settings_page_slug . '_status' );
 		add_settings_field( 'a8c_developer_setting_permalink_structure', esc_html__( 'Pretty Permalinks', 'a8c-developer' ), array( &$this, 'settings_field_setting_permalink_structure' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
@@ -298,16 +477,14 @@ class Automattic_Developer {
 	}
 
 	// TODO: Make this not shitty
+	// TODO: Check user caps, only show status (not links) if user can't do anything about it
 	public function settings_field_plugin( $args ) {
 		if ( $args['active'] ) {
 			echo '<span style="font-weight:bold;color:green;">' . esc_html__( 'ACTIVE', 'a8c-developer' ) . '</span>';
 		} else {
-			$filename = ( ! empty( $args['filename'] ) ) ? $args['filename'] : $args['slug'] . '.php';
-
-			if ( file_exists( WP_PLUGIN_DIR . '/' . $args['slug'] . '/' . $filename ) ) {
-				// Installed but not activated
-				$rel_path = $args['slug'] . '/' . $filename;
-				echo '<a style="font-weight:bold;color:darkred;" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $rel_path ), 'activate-plugin_' . $rel_path ) ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
+			if ( $this->is_recommended_plugin_installed( $args['slug'] ) ) {
+				$path = $this->get_path_for_recommended_plugin( $args['slug'] );
+				echo '<a style="font-weight:bold;color:darkred;" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
 			} else {
 				// Needs to be installed
 				echo '<a style="font-weight:bold;color:darkred;" href="' . esc_url( wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) ) . '" title="' . esc_attr__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</a>';
@@ -351,8 +528,71 @@ class Automattic_Developer {
 
 		return $settings;
 	}
+
+	public function save_project_type( $type ) {
+		$settings = $this->settings;
+		$settings['project_type'] = $type;
+
+		$this->settings = $this->settings_validate( $settings );
+
+		update_option( $this->option_name, $this->settings );
+	}
+
+	public function get_path_for_recommended_plugin( $slug ) {
+		$filename = ( ! empty( $this->recommended_plugins[$slug]['filename'] ) ) ? $this->recommended_plugins[$slug]['filename'] : $slug . '.php';
+
+		return $slug . '/' . $filename;
+	}
+
+	public function is_recommended_plugin_active( $slug ) {
+		if ( empty( $this->recommended_plugins[$slug] ) )
+			return false;
+
+		return $this->recommended_plugins[$slug]['active'];
+	}
+
+	public function is_recommended_plugin_installed( $slug ) {
+		if ( empty( $this->recommended_plugins[$slug] ) )
+			return false;
+
+		if ( $this->is_recommended_plugin_active( $slug ) || file_exists( WP_PLUGIN_DIR . '/' . $this->get_path_for_recommended_plugin( $slug ) ) )
+			return true;
+
+		return false;
+	}
 }
 
 $Automattic_Developer = new Automattic_Developer();
+
+
+
+if ( ! empty( $_POST['action'] ) && 'a8c_developer_install_plugin' == $_POST['action'] ) {
+
+	include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
+
+	class Automattic_Developer_Empty_Upgrader_Skin extends WP_Upgrader_Skin {
+		function __construct($args = array()) {
+			$defaults = array( 'type' => 'web', 'url' => '', 'plugin' => '', 'nonce' => '', 'title' => '' );
+			$args = wp_parse_args( $args, $defaults );
+
+			$this->type = $args['type'];
+			$this->api = isset( $args['api'] ) ? $args['api'] : array();
+
+			parent::__construct( $args );
+		}
+
+		public function request_filesystem_credentials() {
+			return true;
+		}
+
+		public function error() {
+			die( '-1' );
+		}
+
+		public function header() {}
+		public function footer() {}
+		public function feedback() {}
+	}
+}
 
 ?>
