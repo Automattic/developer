@@ -78,6 +78,11 @@ class Automattic_Developer {
 				'name'   => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
 				'active' => class_exists( 'Deprecated_Log' ),
 			),
+			'vip-scanner' => array(
+				'project_type' => 'all',
+				'name'   => esc_html__( 'VIP Scanner', 'a8c-developer' ),
+				'active' => class_exists( 'VIP_Scanner' ),
+			),
 			/*
 			'jetpack' => array(
 				'project_type' => 'wpcom-vip',
