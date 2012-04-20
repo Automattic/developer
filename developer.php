@@ -26,6 +26,8 @@ class Automattic_Developer {
 	public $default_settings       = array();
 
 	// Using "private" for read-only functionality. See __get().
+	private $version               = '1.0.0';
+
 	private $option_name           = 'a8c_developer';
 	private $settings_page_slug    = 'a8c_developer';
 
@@ -118,7 +120,23 @@ class Automattic_Developer {
 
 		register_setting( $this->option_name, $this->option_name, array( &$this, 'settings_validate' ) );
 
-		wp_register_style( 'a8c-developer', plugins_url( 'developer.css', __FILE__ ), array(), '1.0.0' );
+
+		wp_register_script( 'a8c-developer-lightbox', plugins_url( 'js/lightbox.js', __FILE__ ), array( 'jquery' ), $this->version );
+		$strings = array(
+			'settings_slug'  => $this->settings_page_slug,
+			'lightbox_title' => __( 'Developer: Plugin Setup', 'a8c-developer' ),
+			'go_to_step_2'   => ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) && 'direct' == get_filesystem_method() ) ? 'yes' : 'no',
+			'saving'         => __( 'Saving...', 'a8c-developer' ),
+			'installing'     => '<img src="images/loading.gif" alt="" /> ' . esc_html__( 'Installing...', 'a8c-developer' ),
+			'installed'      => __( 'Installed', 'a8c-developer' ),
+			'activating'     => '<img src="images/loading.gif" alt="" /> ' . esc_html__( 'Activating...', 'a8c-developer' ),
+			'activated'      => __( 'Activated', 'a8c-developer' ),
+			'error'          => __( 'Error!', 'a8c-developer' ),
+		);
+		wp_localize_script( 'a8c-developer-lightbox', 'a8c_developer_i18n', $strings );
+
+		wp_register_style( 'a8c-developer', plugins_url( 'css/developer.css', __FILE__ ), array(), $this->version );
+
 
 		// Handle the submission of the lightbox form if step 2 won't be shown
 		if ( ! empty( $_POST['a8c_developer_action'] ) ) {
@@ -158,25 +176,28 @@ class Automattic_Developer {
 	public function load_lightbox_script_and_styles() {
 		wp_enqueue_script( 'colorbox', plugins_url( 'colorbox/jquery.colorbox-min.js', __FILE__ ), array( 'jquery' ), '1.3.19' );
 		wp_enqueue_style( 'a8c-developer-colorbox', plugins_url( 'colorbox/colorbox.css', __FILE__ ), array(), '1.3.19' );
+
+		wp_enqueue_script( 'a8c-developer-lightbox' );
 		wp_enqueue_style( 'a8c-developer' );
 	}
 
-	public function output_setup_box_html() { ?>
+	public function output_setup_box_html() {
+?>
 
 		<div style="display:none">
 			<div id="a8c-developer-setup-dialog-step-1" class="a8c-developer-dialog">
 				<p><em>TODO: Copy+formatting+i18n</em></p>
 
-				<strong>Thanks for installing Automattic's Developer helper plugin!</strong>
+				<strong><?php esc_html_e( "Thanks for installing Automattic's Developer helper plugin!", 'a8c-developer' ); ?></strong>
 
-				<p>Before we begin, what type of website are you developing?</p>
+				<p><?php esc_html_e( 'Before we begin, what type of website are you developing?', 'a8c-developer' ); ?></p>
 
 				<form id="a8c-developer-setup-dialog-step-1-form" action="options-general.php?page=a8c_developer" method="post">
 					<?php wp_nonce_field( 'a8c_developer_lightbox_step_1' ); ?> 
 					<input type="hidden" name="action" value="a8c_developer_lightbox_step_1" />
 
-					<p><label><input type="radio" name="a8c_developer_project_type" value="wporg" checked="checked" /> A normal WordPress.org website</label></p>
-					<p><label><input type="radio" name="a8c_developer_project_type" value="wpcom-vip" /> A website hosted on WordPress.com VIP</label></p>
+					<p><label><input type="radio" name="a8c_developer_project_type" value="wporg" checked="checked" /> <?php esc_html_e( 'A normal WordPress.org website', 'a8c-developer' ); ?></label></p>
+					<p><label><input type="radio" name="a8c_developer_project_type" value="wpcom-vip" /> <?php esc_html_e( 'A website hosted on WordPress.com VIP', 'a8c-developer' ); ?></label></p>
 
 					<?php submit_button( null, 'primary', 'a8c-developer-setup-dialog-step-1-submit' ); ?>
 				</form>
@@ -185,57 +206,6 @@ class Automattic_Developer {
 				<!-- This gets populated via AJAX -->
 			</div>
 		</div>
-
-		<script type="text/javascript">
-			jQuery(document).ready(function($){
-				function make_colorbox( href, transition ) {
-					$.colorbox({
-						inline: true,
-						href: href,
-						title: '<?php echo esc_js( __( 'Developer: Plugin Setup' ) ); ?>',
-						innerWidth: 500,
-						maxHeight: '100%',
-						transition: transition,
-
-						internetexplorer: 'sucks' // TODO: Remove this temporary item preventing me from breaking IE with a trailing comma
-					});
-				}
-
-				make_colorbox( '#a8c-developer-setup-dialog-step-1', 'none' );
-
-				$('#a8c-developer-setup-dialog-step-1-form').submit( function(e) {
-					var form = this;
-
-					$('#a8c-developer-setup-dialog-step-1-submit').val('Saving...');
-
-					// This is controlled from within PHP
-					// Aborts going on to show step 2 if it doesn't apply
-					if ( <?php echo ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) || 'direct' != get_filesystem_method() ) ? 'true' : 'false'; ?> )
-						return;
-
-					e.preventDefault();
-
-					$.post( ajaxurl, $(form).serialize() )
-						.success( function( result ) {
-							// If there was an error with the AJAX save, then do a normal POST
-							if ( '-1' == result ) {
-								return;
-							}
-
-							// AJAX says no step 2 needed, so head to the settings page
-							if ( 'redirect' == result ) {
-								location.href = 'options-general.php?page=<?php echo esc_js( $this->settings_page_slug ); ?>&updated=1';
-								return;
-							}
-
-							// Display the AJAX reponse
-							$('#a8c-developer-setup-dialog-step-2').html( result );
-							make_colorbox( '#a8c-developer-setup-dialog-step-2' );
-						})
-					;
-				});
-			});
-		</script>
 
 <?php
 	}
@@ -266,9 +236,9 @@ class Automattic_Developer {
 				if ( ! $to_install_or_enable )
 					die( 'redirect' );
 
-				echo '<strong>Plugins</strong>';
+				echo '<strong>' . esc_html__( 'Plugins', 'a8c-developer' ) . '</strong>';
 
-				echo '<p>We recommend that you also install and activate the following plugins:</p>';
+				echo '<p>' . esc_html__( 'We recommend that you also install and activate the following plugins:', 'a8c-developer' ) . '</p>';
 
 				echo '<ul>';
 
@@ -281,68 +251,13 @@ class Automattic_Developer {
 
 						if ( $this->is_recommended_plugin_installed( $plugin_slug ) ) {
 							$path = $this->get_path_for_recommended_plugin( $plugin_slug );
-							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c_developer_button_activate" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '">Activate</button></li>';
+							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c_developer_button_activate" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '">' . esc_html__( 'Activate', 'a8c-developer' ) . '</button></li>';
 						} else {
-							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c_developer_button_install" data-pluginslug="' . esc_attr( $plugin_slug ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_install_plugin_' . $plugin_slug ) . '">Install</button></li>';
+							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c_developer_button_install" data-pluginslug="' . esc_attr( $plugin_slug ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_install_plugin_' . $plugin_slug ) . '">' . esc_html__( 'Install', 'a8c-developer' ) . '</button></li>';
 						}
 					}
 
 				echo '</ul>';
-
-?>
-
-				<script type="text/javascript">
-					(function($){
-						$('.a8c_developer_button_install').click( function() {
-							var button = this;
-
-							$(button).html('<img src="images/loading.gif" alt="" /> Installing...');
-
-							$.post( ajaxurl, {
-								'action': 'a8c_developer_install_plugin',
-								'_ajax_nonce': $(button).attr('data-nonce'),
-								'plugin_slug': $(button).attr('data-pluginslug')
-							} )
-								.success( function( result ) {
-									if ( '1' == result ) {
-										$(button).html('Installed');
-										$(button).unbind('click').prop('disabled', true);
-									} else {
-										$(button).html('Error!');
-									}
-								})
-								.error( function() {
-									$(button).html('Error!');
-								})
-							;
-						});
-
-						$('.a8c_developer_button_activate').click( function() {
-							var button = this;
-
-							$(button).html('<img src="images/loading.gif" alt="" /> Activating...');
-
-							$.post( ajaxurl, {
-								'action': 'a8c_developer_activate_plugin',
-								'_ajax_nonce': $(button).attr('data-nonce'),
-								'path': $(button).attr('data-path')
-							} )
-								.success( function( result ) {
-									if ( '1' == result ) {
-										$(button).html('Activated');
-										$(button).unbind('click').prop('disabled', true);
-									} else {
-										$(button).html('Error!');
-									}
-								})
-								.error( function() {
-									$(button).html('Error!');
-								})
-							;
-						});
-					})(jQuery);
-				</script>
-<?php
 
 				exit();
 
