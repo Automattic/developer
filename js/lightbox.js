@@ -12,13 +12,15 @@ jQuery(document).ready(function($){
 
 	make_colorbox( '#a8c-developer-setup-dialog-step-1', 'none' );
 
-	$('#a8c-developer-setup-dialog-step-1-form').submit( function(element) {
-		var form = element;
+	$('#a8c-developer-setup-dialog-step-1-form').submit( function(e) {
+		var form = this;
 
 		$('#a8c-developer-setup-dialog-step-1-submit').val( a8c_developer_i18n.saving );
 
-		if ( 'yes' == a8c_developer_i18n.go_to_step_2 )
+		if ( 'yes' != a8c_developer_i18n.go_to_step_2 )
 			return;
+
+		e.preventDefault();
 
 		$.post( ajaxurl, $(form).serialize() )
 			.success( function( result ) {
@@ -26,8 +28,6 @@ jQuery(document).ready(function($){
 				if ( '-1' == result ) {
 					return;
 				}
-
-				form.preventDefault();
 
 				// AJAX says no step 2 needed, so head to the settings page
 				if ( 'redirect' == result ) {
@@ -41,52 +41,56 @@ jQuery(document).ready(function($){
 			})
 		;
 	});
-
-	$('.a8c_developer_button_install').on( 'click', function() {
-		var button = this;
-
-		$(button).html( a8c_developer_i18n.installing );
-
-		$.post( ajaxurl, {
-			'action': 'a8c_developer_install_plugin',
-			'_ajax_nonce': $(button).attr('data-nonce'),
-			'plugin_slug': $(button).attr('data-pluginslug')
-		} )
-			.success( function( result ) {
-				if ( '1' == result ) {
-					$(button).html( a8c_developer_i18n.installed );
-					$(button).unbind('click').prop('disabled', true);
-				} else {
-					$(button).html( a8c_developer_i18n.error );
-				}
-			})
-			.error( function() {
-				$(button).html( a8c_developer_i18n.error );
-			})
-		;
-	});
-
-	$('.a8c_developer_button_activate').on( 'click', function() {
-		var button = this;
-
-		$(button).html( a8c_developer_i18n.activating );
-
-		$.post( ajaxurl, {
-			'action': 'a8c_developer_activate_plugin',
-			'_ajax_nonce': $(button).attr('data-nonce'),
-			'path': $(button).attr('data-path')
-		} )
-			.success( function( result ) {
-				if ( '1' == result ) {
-					$(button).html( a8c_developer_i18n.activated );
-					$(button).unbind('click').prop('disabled', true);
-				} else {
-					$(button).html( a8c_developer_i18n.error );
-				}
-			})
-			.error( function() {
-				$(button).html( a8c_developer_i18n.error );
-			})
-		;
-	});
 });
+
+function a8c_developer_bind_events() {
+	(function($){
+		$('.a8c_developer_button_install').click( function() {
+			var button = this;
+
+			$(button).html( a8c_developer_i18n.installing );
+
+			$.post( ajaxurl, {
+				'action': 'a8c_developer_install_plugin',
+				'_ajax_nonce': $(button).attr('data-nonce'),
+				'plugin_slug': $(button).attr('data-pluginslug')
+			} )
+				.success( function( result ) {
+					if ( '1' == result ) {
+						$(button).html( a8c_developer_i18n.installed );
+						$(button).unbind('click').prop('disabled', true);
+					} else {
+						$(button).html( a8c_developer_i18n.error );
+					}
+				})
+				.error( function() {
+					$(button).html( a8c_developer_i18n.error );
+				})
+			;
+		});
+
+		$('.a8c_developer_button_activate').click( function() {
+			var button = this;
+
+			$(button).html( a8c_developer_i18n.activating );
+
+			$.post( ajaxurl, {
+				'action': 'a8c_developer_activate_plugin',
+				'_ajax_nonce': $(button).attr('data-nonce'),
+				'path': $(button).attr('data-path')
+			} )
+				.success( function( result ) {
+					if ( '1' == result ) {
+						$(button).html( a8c_developer_i18n.activated );
+						$(button).unbind('click').prop('disabled', true);
+					} else {
+						$(button).html( a8c_developer_i18n.error );
+					}
+				})
+				.error( function() {
+					$(button).html( a8c_developer_i18n.error );
+				})
+			;
+		});
+	})(jQuery);
+}

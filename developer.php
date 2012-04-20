@@ -17,7 +17,7 @@ Domain Path:  /languages/
 
 // Load helper class if installing a plugin
 if ( ! empty( $_POST['action'] ) && 'a8c_developer_install_plugin' == $_POST['action'] )
-	require_once( __DIR__ . '/includes/class-empty-upgrader-skin.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-empty-upgrader-skin.php' );
 
 
 class Automattic_Developer {
@@ -44,6 +44,9 @@ class Automattic_Developer {
 		add_action( 'wp_ajax_a8c_developer_lightbox_step_1',  array( &$this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_a8c_developer_install_plugin',   array( &$this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_a8c_developer_activate_plugin',  array( &$this, 'ajax_handler' ) );
+
+		// TODO: Remove, dev only for cache busting
+		$this->version = mt_rand();
 	}
 
 	// Allows private variables to be read. Basically implements read-only variables.
@@ -72,18 +75,18 @@ class Automattic_Developer {
 			),
 			'debug-bar-cron' => array(
 				'project_type' => 'all',
-				'name'   => esc_html__( 'Debug Bar Cron', 'a8c-developer' ),
-				'active' => function_exists( 'zt_add_debug_bar_cron_panel' ),
+				'name'         => esc_html__( 'Debug Bar Cron', 'a8c-developer' ),
+				'active'       => function_exists( 'zt_add_debug_bar_cron_panel' ),
 			),
 			'log-deprecated-notices' => array(
 				'project_type' => 'all',
-				'name'   => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
-				'active' => class_exists( 'Deprecated_Log' ),
+				'name'         => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
+				'active'       => class_exists( 'Deprecated_Log' ),
 			),
 			'vip-scanner' => array(
 				'project_type' => 'all',
-				'name'   => esc_html__( 'VIP Scanner', 'a8c-developer' ),
-				'active' => class_exists( 'VIP_Scanner' ),
+				'name'         => esc_html__( 'VIP Scanner', 'a8c-developer' ),
+				'active'       => class_exists( 'VIP_Scanner' ),
 			),
 			/*
 			'jetpack' => array(
@@ -94,13 +97,13 @@ class Automattic_Developer {
 			/**/
 			'grunion-contact-form' => array(
 				'project_type' => 'wpcom-vip',
-				'name'   => esc_html__( 'Grunion Contact Form', 'a8c-developer' ),
-				'active' => defined( 'GRUNION_PLUGIN_DIR' ),
+				'name'         => esc_html__( 'Grunion Contact Form', 'a8c-developer' ),
+				'active'       => defined( 'GRUNION_PLUGIN_DIR' ),
 			),
 			'polldaddy' => array(
 				'project_type' => 'wpcom-vip',
-				'name'   => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
-				'active' => class_exists( 'WP_Polldaddy' ),
+				'name'         => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
+				'active'       => class_exists( 'WP_Polldaddy' ),
 			),
 			/*
 			'foobar' => array(
@@ -124,8 +127,8 @@ class Automattic_Developer {
 		wp_register_script( 'a8c-developer-lightbox', plugins_url( 'js/lightbox.js', __FILE__ ), array( 'jquery' ), $this->version );
 		$strings = array(
 			'settings_slug'  => $this->settings_page_slug,
-			'lightbox_title' => __( 'Developer: Plugin Setup', 'a8c-developer' ),
 			'go_to_step_2'   => ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) && 'direct' == get_filesystem_method() ) ? 'yes' : 'no',
+			'lightbox_title' => __( 'Developer: Plugin Setup', 'a8c-developer' ),
 			'saving'         => __( 'Saving...', 'a8c-developer' ),
 			'installing'     => '<img src="images/loading.gif" alt="" /> ' . esc_html__( 'Installing...', 'a8c-developer' ),
 			'installed'      => __( 'Installed', 'a8c-developer' ),
@@ -258,6 +261,8 @@ class Automattic_Developer {
 					}
 
 				echo '</ul>';
+
+				echo '<script type="text/javascript">a8c_developer_bind_events();</script>';
 
 				exit();
 
