@@ -26,6 +26,7 @@ jQuery(document).ready(function($){
 			.success( function( result ) {
 				// If there was an error with the AJAX save, then do a normal POST
 				if ( '-1' == result ) {
+					location.href = 'options-general.php?page=' + a8c_developer_i18n.settings_slug + '&a8cdev_errorsaving=1';
 					return;
 				}
 
