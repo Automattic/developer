@@ -15,6 +15,11 @@ Domain Path:  /languages/
 
 **************************************************************************/
 
+// Load helper class if installing a plugin
+if ( ! empty( $_POST['action'] ) && 'a8c_developer_install_plugin' == $_POST['action'] )
+	require_once( __DIR__ . '/includes/class-empty-upgrader-skin.php' );
+
+
 class Automattic_Developer {
 
 	public $settings               = array();
@@ -563,36 +568,5 @@ class Automattic_Developer {
 }
 
 $Automattic_Developer = new Automattic_Developer();
-
-
-
-if ( ! empty( $_POST['action'] ) && 'a8c_developer_install_plugin' == $_POST['action'] ) {
-
-	include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-
-	class Automattic_Developer_Empty_Upgrader_Skin extends WP_Upgrader_Skin {
-		function __construct($args = array()) {
-			$defaults = array( 'type' => 'web', 'url' => '', 'plugin' => '', 'nonce' => '', 'title' => '' );
-			$args = wp_parse_args( $args, $defaults );
-
-			$this->type = $args['type'];
-			$this->api = isset( $args['api'] ) ? $args['api'] : array();
-
-			parent::__construct( $args );
-		}
-
-		public function request_filesystem_credentials() {
-			return true;
-		}
-
-		public function error() {
-			die( '-1' );
-		}
-
-		public function header() {}
-		public function footer() {}
-		public function feedback() {}
-	}
-}
 
 ?>
