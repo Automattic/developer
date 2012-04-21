@@ -124,7 +124,7 @@ class Automattic_Developer {
 		register_setting( $this->option_name, $this->option_name, array( &$this, 'settings_validate' ) );
 
 
-		wp_register_script( 'a8c-developer-lightbox', plugins_url( 'js/lightbox.js', __FILE__ ), array( 'jquery' ), $this->version );
+		wp_register_script( 'a8c-developer', plugins_url( 'developer.js', __FILE__ ), array( 'jquery' ), $this->version );
 		$strings = array(
 			'settings_slug'  => $this->settings_page_slug,
 			'go_to_step_2'   => ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) && 'direct' == get_filesystem_method() ) ? 'yes' : 'no',
@@ -136,9 +136,9 @@ class Automattic_Developer {
 			'activated'      => __( 'Activated', 'a8c-developer' ),
 			'error'          => __( 'Error!', 'a8c-developer' ),
 		);
-		wp_localize_script( 'a8c-developer-lightbox', 'a8c_developer_i18n', $strings );
+		wp_localize_script( 'a8c-developer', 'a8c_developer_i18n', $strings );
 
-		wp_register_style( 'a8c-developer', plugins_url( 'css/developer.css', __FILE__ ), array(), $this->version );
+		wp_register_style( 'a8c-developer', plugins_url( 'developer.css', __FILE__ ), array(), $this->version );
 
 
 		// Handle the submission of the lightbox form if step 2 won't be shown
@@ -180,7 +180,7 @@ class Automattic_Developer {
 		wp_enqueue_script( 'colorbox', plugins_url( 'colorbox/jquery.colorbox-min.js', __FILE__ ), array( 'jquery' ), '1.3.19' );
 		wp_enqueue_style( 'a8c-developer-colorbox', plugins_url( 'colorbox/colorbox.css', __FILE__ ), array(), '1.3.19' );
 
-		wp_enqueue_script( 'a8c-developer-lightbox' );
+		wp_enqueue_script( 'a8c-developer' );
 		wp_enqueue_style( 'a8c-developer' );
 	}
 
@@ -210,6 +210,7 @@ class Automattic_Developer {
 			</div>
 		</div>
 
+		<script type="text/javascript">a8c_developer_lightbox();</script>
 <?php
 	}
 

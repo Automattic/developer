@@ -1,48 +1,50 @@
-jQuery(document).ready(function($){
-	function make_colorbox( href, transition ) {
-		$.colorbox({
-			inline: true,
-			href: href,
-			title: a8c_developer_i18n.lightbox_title,
-			innerWidth: 500,
-			maxHeight: '100%',
-			transition: transition
+function a8c_developer_lightbox() {
+	(function($){
+		function make_colorbox( href, transition ) {
+			$.colorbox({
+				inline: true,
+				href: href,
+				title: a8c_developer_i18n.lightbox_title,
+				innerWidth: 500,
+				maxHeight: '100%',
+				transition: transition
+			});
+		}
+
+		make_colorbox( '#a8c-developer-setup-dialog-step-1', 'none' );
+
+		$('#a8c-developer-setup-dialog-step-1-form').submit( function(e) {
+			var form = this;
+
+			$('#a8c-developer-setup-dialog-step-1-submit').val( a8c_developer_i18n.saving );
+
+			if ( 'yes' != a8c_developer_i18n.go_to_step_2 )
+				return;
+
+			e.preventDefault();
+
+			$.post( ajaxurl, $(form).serialize() )
+				.success( function( result ) {
+					// If there was an error with the AJAX save, then do a normal POST
+					if ( '-1' == result ) {
+						location.href = 'options-general.php?page=' + a8c_developer_i18n.settings_slug + '&a8cdev_errorsaving=1';
+						return;
+					}
+
+					// AJAX says no step 2 needed, so head to the settings page
+					if ( 'redirect' == result ) {
+						location.href = 'options-general.php?page=' + a8c_developer_i18n.settings_slug + '&updated=1';
+						return;
+					}
+
+					// Display the AJAX reponse
+					$('#a8c-developer-setup-dialog-step-2').html( result );
+					make_colorbox( '#a8c-developer-setup-dialog-step-2' );
+				})
+			;
 		});
-	}
-
-	make_colorbox( '#a8c-developer-setup-dialog-step-1', 'none' );
-
-	$('#a8c-developer-setup-dialog-step-1-form').submit( function(e) {
-		var form = this;
-
-		$('#a8c-developer-setup-dialog-step-1-submit').val( a8c_developer_i18n.saving );
-
-		if ( 'yes' != a8c_developer_i18n.go_to_step_2 )
-			return;
-
-		e.preventDefault();
-
-		$.post( ajaxurl, $(form).serialize() )
-			.success( function( result ) {
-				// If there was an error with the AJAX save, then do a normal POST
-				if ( '-1' == result ) {
-					location.href = 'options-general.php?page=' + a8c_developer_i18n.settings_slug + '&a8cdev_errorsaving=1';
-					return;
-				}
-
-				// AJAX says no step 2 needed, so head to the settings page
-				if ( 'redirect' == result ) {
-					location.href = 'options-general.php?page=' + a8c_developer_i18n.settings_slug + '&updated=1';
-					return;
-				}
-
-				// Display the AJAX reponse
-				$('#a8c-developer-setup-dialog-step-2').html( result );
-				make_colorbox( '#a8c-developer-setup-dialog-step-2' );
-			})
-		;
-	});
-});
+	})(jQuery);
+}
 
 function a8c_developer_bind_events() {
 	(function($){
