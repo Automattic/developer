@@ -411,14 +411,14 @@ class Automattic_Developer {
 	// TODO: Check user caps, only show status (not links) if user can't do anything about it
 	public function settings_field_plugin( $args ) {
 		if ( $args['active'] ) {
-			echo '<span style="font-weight:bold;color:green;">' . esc_html__( 'ACTIVE', 'a8c-developer' ) . '</span>';
+			echo '<span class="a8c-developer-active">' . esc_html__( 'ACTIVE', 'a8c-developer' ) . '</span>';
 		} else {
 			if ( $this->is_recommended_plugin_installed( $args['slug'] ) ) {
 				$path = $this->get_path_for_recommended_plugin( $args['slug'] );
-				echo '<a style="font-weight:bold;color:darkred;" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
+				echo '<a class="a8c-developer-notactive" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
 			} else {
 				// Needs to be installed
-				echo '<a style="font-weight:bold;color:darkred;" href="' . esc_url( wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) ) . '" title="' . esc_attr__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</a>';
+				echo '<a class="a8c-developer-notactive" href="' . esc_url( wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) ) . '" title="' . esc_attr__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</a>';
 			}
 		}
 	}
@@ -430,9 +430,9 @@ class Automattic_Developer {
 	// TODO: Make this not shitty
 	public function settings_field_constant( $args ) {
 		if ( defined( $args['constant'] ) && constant( $args['constant'] ) ) {
-			echo '<span style="font-weight:bold;color:green;">' . esc_html__( 'SET', 'a8c-developer' ) . '</span>';
+			echo '<span class="a8c-developer-active">' . esc_html__( 'SET', 'a8c-developer' ) . '</span>';
 		} else {
-			echo '<span style="font-weight:bold;color:darkred;">' . esc_html__( 'NOT SET', 'a8c-developer' ) . '</span>';
+			echo '<span class="a8c-developer-notactive">' . esc_html__( 'NOT SET', 'a8c-developer' ) . '</span>';
 		}
 
 		if ( ! empty( $args['description'] ) )
@@ -446,9 +446,9 @@ class Automattic_Developer {
 
 	public function settings_field_setting_permalink_structure() {
 		if ( get_option( 'permalink_structure' ) ) {
-			echo '<span style="font-weight:bold;color:green;">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
+			echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
 		} else {
-			echo '<a style="font-weight:bold;color:darkred;" href="' . admin_url( 'options-permalink.php' ) . '">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a> ' . __( '<a href="http://codex.wordpress.org/Using_Permalinks" target="_blank">Need help?</a>', 'a8c-developer' );
+			echo '<a class="a8c-developer-notactive" href="' . admin_url( 'options-permalink.php' ) . '">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a> ' . __( '<a href="http://codex.wordpress.org/Using_Permalinks" target="_blank">Need help?</a>', 'a8c-developer' );
 		}
 	}
 

@@ -1,3 +1,13 @@
 .a8c-developer-dialog {
 	margin: 25px;
 }
+
+.a8c-developer-active {
+	font-weight: bold;
+	color: green;
+}
+
+.a8c-developer-notactive {
+	font-weight: bold;
+	color: maroon;
+}
