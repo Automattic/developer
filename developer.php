@@ -41,6 +41,8 @@ class Automattic_Developer {
 		add_action( 'admin_menu',     array( &$this, 'register_settings_page' ) );
 		add_action( 'admin_bar_menu', array( &$this, 'add_node_to_admin_bar' ) );
 
+		add_action( 'admin_enqueue_scripts', array( &$this, 'load_settings_page_script_and_style' ) );
+
 		add_action( 'wp_ajax_a8c_developer_lightbox_step_1',  array( &$this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_a8c_developer_install_plugin',   array( &$this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_a8c_developer_activate_plugin',  array( &$this, 'ajax_handler' ) );
@@ -154,7 +156,7 @@ class Automattic_Developer {
 			if ( ! empty( $_GET['a8cdev_errorsaving'] ) ) {
 				add_settings_error( $this->settings_page_slug, $this->settings_page_slug . '_error_saving', __( 'Error saving settings. Please try again.', 'a8c-developer' ) );
 			} elseif ( current_user_can( 'manage_options' ) ) {
-				add_action( 'admin_enqueue_scripts', array( &$this, 'load_lightbox_script_and_styles' ) );
+				add_action( 'admin_enqueue_scripts', array( &$this, 'load_lightbox_scripts_and_styles' ) );
 				add_action( 'admin_footer', array( &$this, 'output_setup_box_html' ) );
 			}
 		}
@@ -176,7 +178,15 @@ class Automattic_Developer {
 		) );
 	}
 
-	public function load_lightbox_script_and_styles() {
+	public function load_settings_page_script_and_style( $hook_suffix ) {
+		if ( 'settings_page_' . $this->settings_page_slug != $hook_suffix )
+			return;
+
+		wp_enqueue_script( 'a8c-developer' );
+		wp_enqueue_style( 'a8c-developer' );
+	}
+
+	public function load_lightbox_scripts_and_styles() {
 		wp_enqueue_script( 'colorbox', plugins_url( 'colorbox/jquery.colorbox-min.js', __FILE__ ), array( 'jquery' ), '1.3.19' );
 		wp_enqueue_style( 'a8c-developer-colorbox', plugins_url( 'colorbox/colorbox.css', __FILE__ ), array(), '1.3.19' );
 
