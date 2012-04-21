@@ -255,9 +255,9 @@ class Automattic_Developer {
 
 						if ( $this->is_recommended_plugin_installed( $plugin_slug ) ) {
 							$path = $this->get_path_for_recommended_plugin( $plugin_slug );
-							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c_developer_button_activate" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '">' . esc_html__( 'Activate', 'a8c-developer' ) . '</button></li>';
+							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c-developer-button-activate" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '">' . esc_html__( 'Activate', 'a8c-developer' ) . '</button></li>';
 						} else {
-							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c_developer_button_install" data-pluginslug="' . esc_attr( $plugin_slug ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_install_plugin_' . $plugin_slug ) . '">' . esc_html__( 'Install', 'a8c-developer' ) . '</button></li>';
+							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c-developer-button-install" data-pluginslug="' . esc_attr( $plugin_slug ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_install_plugin_' . $plugin_slug ) . '">' . esc_html__( 'Install', 'a8c-developer' ) . '</button></li>';
 						}
 					}
 

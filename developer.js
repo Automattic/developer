@@ -48,7 +48,7 @@ function a8c_developer_lightbox() {
 
 function a8c_developer_bind_events() {
 	(function($){
-		$('.a8c_developer_button_install').click( function() {
+		$('.a8c-developer-button-install').click( function() {
 			var button = this;
 
 			$(button).html( a8c_developer_i18n.installing );
@@ -72,7 +72,7 @@ function a8c_developer_bind_events() {
 			;
 		});
 
-		$('.a8c_developer_button_activate').click( function() {
+		$('.a8c-developer-button-activate').click( function() {h
 			var button = this;
 
 			$(button).html( a8c_developer_i18n.activating );
