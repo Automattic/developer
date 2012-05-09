@@ -80,6 +80,11 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Debug Bar Cron', 'a8c-developer' ),
 				'active'       => function_exists( 'zt_add_debug_bar_cron_panel' ),
 			),
+			'rewrite-rules-inspector' => array(
+				'project_type' 	=> 'all',
+				'name' 		=> esc_html__( 'Rewrite Rules Inspector', 'a8c-developer' ),
+				'active'	=> class_exists( 'Rewrite_Rules_Inspector' ),
+			),
 			'log-deprecated-notices' => array(
 				'project_type' => 'all',
 				'name'         => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
