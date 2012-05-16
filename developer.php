@@ -112,6 +112,11 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
 				'active'       => class_exists( 'WP_Polldaddy' ),
 			),
+			'monster-widget' => array(
+				'project_type' => 'all',
+				'name'         => esc_html__( 'Monster Widget', 'a8c-developer' ),
+				'active'       => class_exists( 'Monster_Widget' ),
+			),
 			/*
 			'foobar' => array(
 				'name'     => 'Dummy Test Plugin',
