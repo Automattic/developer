@@ -428,17 +428,23 @@ class Automattic_Developer {
 	}
 
 	// TODO: Make this not shitty
-	// TODO: Check user caps, only show status (not links) if user can't do anything about it
 	public function settings_field_plugin( $args ) {
 		if ( $args['active'] ) {
 			echo '<span class="a8c-developer-active">' . esc_html__( 'ACTIVE', 'a8c-developer' ) . '</span>';
-		} else {
-			if ( $this->is_recommended_plugin_installed( $args['slug'] ) ) {
+		} elseif ( $this->is_recommended_plugin_installed( $args['slug'] ) ) {
+			// Needs to be activated
+			if ( current_user_can('activate_plugins') ) {
 				$path = $this->get_path_for_recommended_plugin( $args['slug'] );
-				echo '<a class="a8c-developer-notactive" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
+				echo '<a class="a8c-developer-notactive" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';					
 			} else {
-				// Needs to be installed
+				echo '<span class="a8c-developer-notactive">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</span>';
+			}
+		} else {
+			// Needs to be installed
+			if ( current_user_can('install_plugins') ) {
 				echo '<a class="a8c-developer-notactive" href="' . esc_url( wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) ) . '" title="' . esc_attr__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</a>';
+			} else {
+				echo '<span class="a8c-developer-notactive">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</span>';
 			}
 		}
 	}
