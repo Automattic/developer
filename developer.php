@@ -373,7 +373,9 @@ class Automattic_Developer {
 
 		add_settings_section( 'a8c_developer_settings', esc_html__( 'Settings', 'a8c-developer' ), array( &$this, 'settings_section_settings' ), $this->settings_page_slug . '_status' );
 		add_settings_field( 'a8c_developer_setting_permalink_structure', esc_html__( 'Pretty Permalinks', 'a8c-developer' ), array( &$this, 'settings_field_setting_permalink_structure' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
-
+		if ( 'wpcom-vip' == $this->settings['project_type'] ) {
+			add_settings_field( 'a8c_developer_setting_vip_environment', esc_html__( 'VIP Environment', 'a8c-developer' ), array( &$this, 'settings_field_setting_vip_environment' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
+		}
 
 
 		# Add more sections and fields here as needed
@@ -475,6 +477,14 @@ class Automattic_Developer {
 			echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
 		} else {
 			echo '<a class="a8c-developer-notactive" href="' . admin_url( 'options-permalink.php' ) . '">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a> ' . __( '<a href="http://codex.wordpress.org/Using_Permalinks" target="_blank">Need help?</a>', 'a8c-developer' );
+		}
+	}
+
+	public function settings_field_setting_vip_environment() {	
+		if( file_exists(WP_CONTENT_DIR . '/themes/vip') && file_exists(WP_CONTENT_DIR . '/themes/vip/plugins') ) {
+			echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
+		} else {
+			echo '<span class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</span>';
 		}
 	}
 
