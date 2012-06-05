@@ -117,6 +117,11 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Monster Widget', 'a8c-developer' ),
 				'active'       => class_exists( 'Monster_Widget' ),
 			),
+			'wordpress-beta-tester' => array(
+				'project_type' => 'all',
+				'name'         => esc_html__( 'Beta Tester', 'a8c-developer' ),
+				'active'       => class_exists( 'wp_beta_tester' ),
+			),
 			/*
 			'foobar' => array(
 				'name'     => 'Dummy Test Plugin',
@@ -481,17 +486,17 @@ class Automattic_Developer {
 		}
 	}
 
-        public function settings_field_setting_trunk_environment() {
-                $cur = get_preferred_from_update_core();
-                
-                if( $cur->response == 'development' ) {
-                        echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span><a href='. network_admin_url( 'update-core.php' ) .'>' . esc_html__( 'Stay updated', 'a8c-developer' ) . '</a>';    
-                } else {
-                        echo '<span class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</span>';    
-                }
-        }
+  public function settings_field_setting_trunk_environment() {
+    $cur = get_preferred_from_update_core();
+    
+    if( $cur->response == 'development' ) {
+      echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span><a href='. network_admin_url( 'update-core.php' ) .'>' . esc_html__( 'Stay updated', 'a8c-developer' ) . '</a>';    
+    } else {
+      echo '<span class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</span>';    
+    }
+  }
 
-        public function settings_field_setting_shared_plugins() {	
+  public function settings_field_setting_shared_plugins() {	
 		if( file_exists(WP_CONTENT_DIR . '/themes/vip') && file_exists(WP_CONTENT_DIR . '/themes/vip/plugins') ) {
 			echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
 		} else {
