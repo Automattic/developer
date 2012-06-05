@@ -240,6 +240,7 @@ class Automattic_Developer {
 	}
 
 	public function ajax_handler( $action ) {
+		$action = isset( $_POST['action'] ) ? $_POST['action'] : $action;
 		switch ( $action ) {
 
 			case 'a8c_developer_lightbox_step_1':
@@ -359,6 +360,15 @@ class Automattic_Developer {
 		) );
 
 		// TODO: Refactor this allow AJAX
+		echo
+		'<script type="text/javascript">
+			(function($) {
+				$(document).ready(function() {
+					a8c_developer_bind_events();
+				});
+			})(jQuery);
+		</script>';
+
 		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( &$this, 'settings_section_plugins' ), $this->settings_page_slug . '_status' );
 		foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
 			if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
@@ -379,8 +389,8 @@ class Automattic_Developer {
 		add_settings_section( 'a8c_developer_settings', esc_html__( 'Settings', 'a8c-developer' ), array( &$this, 'settings_section_settings' ), $this->settings_page_slug . '_status' );
 		add_settings_field( 'a8c_developer_setting_permalink_structure', esc_html__( 'Pretty Permalinks', 'a8c-developer' ), array( &$this, 'settings_field_setting_permalink_structure' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
 		if ( 'wpcom-vip' == $this->settings['project_type'] ) {
-                        add_settings_field( 'a8c_developer_setting_trunk_environment', esc_html__( 'Trunk Environment', 'a8c-developer' ), array( &$this, 'settings_field_setting_trunk_environment' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
-                        add_settings_field( 'a8c_developer_setting_shared_plugins', esc_html__( 'Shared Plugins', 'a8c-developer' ), array( &$this, 'settings_field_setting_shared_plugins' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
+      add_settings_field( 'a8c_developer_setting_trunk_environment', esc_html__( 'Trunk Environment', 'a8c-developer' ), array( &$this, 'settings_field_setting_trunk_environment' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
+      add_settings_field( 'a8c_developer_setting_shared_plugins', esc_html__( 'Shared Plugins', 'a8c-developer' ), array( &$this, 'settings_field_setting_shared_plugins' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
 		}
 
 
@@ -443,14 +453,14 @@ class Automattic_Developer {
 			// Needs to be activated
 			if ( current_user_can('activate_plugins') ) {
 				$path = $this->get_path_for_recommended_plugin( $args['slug'] );
-				echo '<a class="a8c-developer-notactive" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';					
+				echo '<a class="a8c-developer-notactive a8c-developer-button-activate" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';					
 			} else {
 				echo '<span class="a8c-developer-notactive">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</span>';
 			}
 		} else {
 			// Needs to be installed
 			if ( current_user_can('install_plugins') ) {
-				echo '<a class="a8c-developer-notactive" href="' . esc_url( wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) ) . '" title="' . esc_attr__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</a>';
+				echo '<a class="a8c-developer-notactive a8c-developer-button-install" href="' . esc_url( wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) ) . '" data-pluginslug="' . esc_attr( $args['slug'] ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_install_plugin_' . $args['slug'] ) . '" title="' . esc_attr__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</a>';
 			} else {
 				echo '<span class="a8c-developer-notactive">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</span>';
 			}

@@ -70,9 +70,11 @@ function a8c_developer_bind_events() {
 					$(button).html( a8c_developer_i18n.error );
 				})
 			;
+
+			return false;
 		});
 
-		$('.a8c-developer-button-activate').click( function() {h
+		$('.a8c-developer-button-activate').click( function() {
 			var button = this;
 
 			$(button).html( a8c_developer_i18n.activating );
@@ -87,13 +89,16 @@ function a8c_developer_bind_events() {
 						$(button).html( a8c_developer_i18n.activated );
 						$(button).unbind('click').prop('disabled', true);
 					} else {
-						$(button).html( a8c_developer_i18n.error );
+						//$(button).html( a8c_developer_i18n.error );
+						$(button).html( result );  
 					}
 				})
 				.error( function() {
 					$(button).html( a8c_developer_i18n.error );
 				})
 			;
+
+			return false;
 		});
 	})(jQuery);
 }
