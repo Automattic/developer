@@ -70,8 +70,6 @@ function a8c_developer_bind_events() {
 					$(button).html( a8c_developer_i18n.error );
 				})
 			;
-
-			return false;
 		});
 
 		$('.a8c-developer-button-activate').click( function() {
@@ -96,8 +94,6 @@ function a8c_developer_bind_events() {
 					$(button).html( a8c_developer_i18n.error );
 				})
 			;
-
-			return false;
 		});
 	})(jQuery);
 }
