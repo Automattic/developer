@@ -130,13 +130,11 @@ class Automattic_Developer {
 				'filename' => 'blah.php',
 			),
 			/**/
-			// TODO: Add more?
 		);
 
 		$this->recommended_constants = array(
 			'WP_DEBUG'    => __( 'Enables <a href="http://codex.wordpress.org/Debugging_in_WordPress" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' ),
 			'SAVEQUERIES' => esc_html__( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' ),
-			'FOOBAR'      => 'A dummy constant for showing a missing constant',
 		);
 
 		register_setting( $this->option_name, $this->option_name, array( &$this, 'settings_validate' ) );
@@ -363,16 +361,8 @@ class Automattic_Developer {
 			),
 		) );
 
-		// TODO: Refactor this allow AJAX
-		echo
-		'<script type="text/javascript">
-			(function($) {
-				$(document).ready(function() {
-					a8c_developer_bind_settings_events();
-				});
-			})(jQuery);
-		</script>';
-
+		echo '<script type="text/javascript">(function($) { $(document).ready(function() { a8c_developer_bind_settings_events(); }); })(jQuery); </script>';
+		
 		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( &$this, 'settings_section_plugins' ), $this->settings_page_slug . '_status' );
 		foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
 			if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
