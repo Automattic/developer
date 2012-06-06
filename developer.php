@@ -121,6 +121,7 @@ class Automattic_Developer {
 				'project_type' => 'all',
 				'name'         => esc_html__( 'Beta Tester', 'a8c-developer' ),
 				'active'       => class_exists( 'wp_beta_tester' ),
+				'filename' 		 => 'wp-beta-tester.php',
 			),
 			/*
 			'foobar' => array(
@@ -152,6 +153,9 @@ class Automattic_Developer {
 			'activating'     => '<img src="images/loading.gif" alt="" /> ' . esc_html__( 'Activating...', 'a8c-developer' ),
 			'activated'      => __( 'Activated', 'a8c-developer' ),
 			'error'          => __( 'Error!', 'a8c-developer' ),
+			'ACTIVE'      	 => __( 'ACTIVE', 'a8c-developer' ),
+			'INSTALLED'      => __( 'INSTALLED', 'a8c-developer' ),
+			'ERROR'      		 => __( 'ERROR!', 'a8c-developer' ),
 		);
 		wp_localize_script( 'a8c-developer', 'a8c_developer_i18n', $strings );
 
@@ -364,7 +368,7 @@ class Automattic_Developer {
 		'<script type="text/javascript">
 			(function($) {
 				$(document).ready(function() {
-					a8c_developer_bind_events();
+					a8c_developer_bind_settings_events();
 				});
 			})(jQuery);
 		</script>';
@@ -389,7 +393,7 @@ class Automattic_Developer {
 		add_settings_section( 'a8c_developer_settings', esc_html__( 'Settings', 'a8c-developer' ), array( &$this, 'settings_section_settings' ), $this->settings_page_slug . '_status' );
 		add_settings_field( 'a8c_developer_setting_permalink_structure', esc_html__( 'Pretty Permalinks', 'a8c-developer' ), array( &$this, 'settings_field_setting_permalink_structure' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
 		if ( 'wpcom-vip' == $this->settings['project_type'] ) {
-      add_settings_field( 'a8c_developer_setting_trunk_environment', esc_html__( 'Trunk Environment', 'a8c-developer' ), array( &$this, 'settings_field_setting_trunk_environment' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
+      add_settings_field( 'a8c_developer_setting_development_version', esc_html__( 'Development Version', 'a8c-developer' ), array( &$this, 'settings_field_setting_development_version' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
       add_settings_field( 'a8c_developer_setting_shared_plugins', esc_html__( 'Shared Plugins', 'a8c-developer' ), array( &$this, 'settings_field_setting_shared_plugins' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
 		}
 
@@ -496,13 +500,13 @@ class Automattic_Developer {
 		}
 	}
 
-  public function settings_field_setting_trunk_environment() {
+  public function settings_field_setting_development_version() {
     $cur = get_preferred_from_update_core();
-    
+
     if( $cur->response == 'development' ) {
-      echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span><a href='. network_admin_url( 'update-core.php' ) .'>' . esc_html__( 'Stay updated', 'a8c-developer' ) . '</a>';    
+      echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
     } else {
-      echo '<span class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</span>';    
+      echo '<a href="'. network_admin_url( 'update-core.php' ) .'" class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a>';    
     }
   }
 

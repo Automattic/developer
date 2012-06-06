@@ -89,12 +89,65 @@ function a8c_developer_bind_events() {
 						$(button).html( a8c_developer_i18n.activated );
 						$(button).unbind('click').prop('disabled', true);
 					} else {
-						//$(button).html( a8c_developer_i18n.error );
-						$(button).html( result );  
+						$(button).html( a8c_developer_i18n.error );
 					}
 				})
 				.error( function() {
 					$(button).html( a8c_developer_i18n.error );
+				})
+			;
+
+			return false;
+		});
+	})(jQuery);
+}
+
+function a8c_developer_bind_settings_events() {
+	(function($){
+		$('.a8c-developer-button-install').click( function() {
+			var button = this;
+
+			$(button).html( a8c_developer_i18n.installing );
+
+			$.post( ajaxurl, {
+				'action': 'a8c_developer_install_plugin',
+				'_ajax_nonce': $(button).attr('data-nonce'),
+				'plugin_slug': $(button).attr('data-pluginslug')
+			} )
+				.success( function( result ) {
+					if ( '1' == result ) {
+						$(button).html( a8c_developer_i18n.INSTALLED );
+					} else {
+						$(button).html( a8c_developer_i18n.ERROR );
+					}
+				})
+				.error( function() {
+					$(button).html( a8c_developer_i18n.ERROR );
+				})
+			;
+
+			return false;
+		});
+
+		$('.a8c-developer-button-activate').click( function() {
+			var button = this;
+
+			$(button).html( a8c_developer_i18n.activating );
+
+			$.post( ajaxurl, {
+				'action': 'a8c_developer_activate_plugin',
+				'_ajax_nonce': $(button).attr('data-nonce'),
+				'path': $(button).attr('data-path')
+			} )
+				.success( function( result ) {
+					if ( '1' == result ) {
+						$(button).replaceWith("<span class='a8c-developer-active'>" + a8c_developer_i18n.ACTIVE + "</span>");
+					} else {
+						$(button).html( a8c_developer_i18n.ERROR );
+					}
+				})
+				.error( function() {
+					$(button).html( a8c_developer_i18n.ERROR );
 				})
 			;
 
