@@ -46,9 +46,6 @@ class Automattic_Developer {
 		add_action( 'wp_ajax_a8c_developer_lightbox_step_1',  array( &$this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_a8c_developer_install_plugin',   array( &$this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_a8c_developer_activate_plugin',  array( &$this, 'ajax_handler' ) );
-
-		// TODO: Remove, dev only for cache busting
-		$this->version = mt_rand();
 	}
 
 	// Allows private variables to be read. Basically implements read-only variables.
@@ -60,10 +57,6 @@ class Automattic_Developer {
 		$this->default_settings = array(
 			'project_type' => false,
 		);
-
-		// TODO: Delete this dev-only code
-		if ( ! empty( $_GET['a8c_developer_reset'] ) )
-			delete_option( $this->option_name );
 
 		$this->settings = wp_parse_args( (array) get_option( $this->option_name ), $this->default_settings );
 	}
@@ -407,12 +400,6 @@ class Automattic_Developer {
 
 			<?php do_settings_sections( $this->settings_page_slug . '_status' ); ?>
 		</form>
-
-		<!-- TODO: remove this dev-only stuff -->
-		<h3 style="margin-top:150px">Current Settings Value:</h3>
-		<?php var_dump( get_option( $this->option_name ) ); ?>
-		<a href="<?php echo esc_url( add_query_arg( 'a8c_developer_reset', 1 ) ); ?>">Delete settings and start over</a>
-
 
 		</div>
 <?php
