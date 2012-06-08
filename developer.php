@@ -426,7 +426,6 @@ class Automattic_Developer {
 		echo '<p>' . esc_html__( 'We recommend you have the following plugins installed:', 'a8c-developer' ) . '</p>';
 	}
 
-	// TODO: Make this not shitty
 	public function settings_field_plugin( $args ) {
 		if ( $args['active'] ) {
 			echo '<span class="a8c-developer-active">' . esc_html__( 'ACTIVE', 'a8c-developer' ) . '</span>';
@@ -452,7 +451,6 @@ class Automattic_Developer {
 		echo '<p>' . __( 'We recommend you set the following constants to <code>true</code> in your <code>wp-config.php</code> file. <a href="http://codex.wordpress.org/Editing_wp-config.php" target="_blank">Need help?</a>', 'a8c-developer' ) . '</p>';
 	}
 
-	// TODO: Make this not shitty
 	public function settings_field_constant( $args ) {
 		if ( defined( $args['constant'] ) && constant( $args['constant'] ) ) {
 			echo '<span class="a8c-developer-active">' . esc_html__( 'SET', 'a8c-developer' ) . '</span>';
