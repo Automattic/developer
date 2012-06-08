@@ -352,7 +352,11 @@ class Automattic_Developer {
 			),
 		) );
 
-		echo '<script type="text/javascript">(function($) { $(document).ready(function() { a8c_developer_bind_settings_events(); }); })(jQuery); </script>';
+		echo '<script type="text/javascript">
+			jQuery(function( $ ) {
+				a8c_developer_bind_settings_events();
+			});
+		</script>';
 		
 		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( &$this, 'settings_section_plugins' ), $this->settings_page_slug . '_status' );
 		foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
