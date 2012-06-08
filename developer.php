@@ -491,7 +491,7 @@ class Automattic_Developer {
 		if( file_exists(WP_CONTENT_DIR . '/themes/vip') && file_exists(WP_CONTENT_DIR . '/themes/vip/plugins') ) {
 			echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
 		} else {
-			echo '<span class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</span>';
+			echo '<a href="http://lobby.vip.wordpress.com/getting-started/development-environment/#plugins-and-helper-functions" class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a>';
 		}
 	}
 
