@@ -386,7 +386,7 @@ class Automattic_Developer {
 
 		<div class="wrap">
 
-		<?php screen_icon(); // TODO: Better icon? ?>
+		<?php screen_icon( 'tools' ); ?>
 
 		<h2><?php esc_html_e( 'Automattic Developer Helper', 'vehicle-info' ); ?></h2>
 
