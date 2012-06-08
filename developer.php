@@ -209,8 +209,6 @@ class Automattic_Developer {
 
 		<div style="display:none">
 			<div id="a8c-developer-setup-dialog-step-1" class="a8c-developer-dialog">
-				<p><em>TODO: Copy+formatting+i18n</em></p>
-
 				<strong><?php esc_html_e( "Thanks for installing Automattic's Developer helper plugin!", 'a8c-developer' ); ?></strong>
 
 				<p><?php esc_html_e( 'Before we begin, what type of website are you developing?', 'a8c-developer' ); ?></p>
