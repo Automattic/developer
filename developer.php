@@ -390,7 +390,7 @@ class Automattic_Developer {
 
 		<?php screen_icon( 'tools' ); ?>
 
-		<h2><?php esc_html_e( 'Automattic Developer Helper', 'vehicle-info' ); ?></h2>
+		<h2><?php esc_html_e( 'Automattic Developer Helper', 'a8c-developer' ); ?></h2>
 
 		<form action="options.php" method="post">
 
