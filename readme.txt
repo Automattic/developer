@@ -1,5 +1,5 @@
 === Developer ===
-Contributors: automattic, batmoo, viper007bond, nbachiyski, tott, danielbachhuber, betzster, nprasath002
+Contributors: automattic, batmoo, Viper007Bond, nbachiyski, tott, danielbachhuber, betzster, nprasath002
 Tags: developer, development, local
 Requires at least: 3.4
 Tested up to: 3.4
