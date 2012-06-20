@@ -15,6 +15,8 @@ A plugin, which helps WordPress developers develop.
 
 The plugin will help you optimize your development environment by making sure that you have all the essential tools and plugins installed and available.
 
+We would like to thank Ejner Galaz for lettign us use the `developer` slug in the WordPress plugin repository.
+
 == Installation ==
 
 1. Upload the `developer` folder to your plugins directory (e.g. `/wp-content/plugins/`)
