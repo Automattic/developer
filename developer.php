@@ -537,5 +537,3 @@ class Automattic_Developer {
 }
 
 $Automattic_Developer = new Automattic_Developer();
-
-?>
