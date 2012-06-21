@@ -33,7 +33,10 @@ Because you haven't asked one yet.
 
 == Screenshots ==
 
-1. The plugin will check to make sure you have the correct plugins and settings available.
+1. On activation, the plugin prompts you to check what type of developer you are. This is used to configure the plugins checks.
+1. On activation, the plugin does a quick check to see if you have the necessary developer plugins installed.
+1. With one-click you can download and install and then activate the plugin.
+1. The plugin's settings page (Settings > Developer) will check to make sure your environment is correctly configured including plugins, constants, and other settings.
 
 == Changelog ==
 
