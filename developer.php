@@ -214,7 +214,7 @@ class Automattic_Developer {
 				<p><?php esc_html_e( 'Before we begin, what type of website are you developing?', 'a8c-developer' ); ?></p>
 
 				<form id="a8c-developer-setup-dialog-step-1-form" action="options-general.php?page=a8c_developer" method="post">
-					<?php wp_nonce_field( 'a8c_developer_lightbox_step_1' ); ?> 
+					<?php wp_nonce_field( 'a8c_developer_lightbox_step_1' ); ?>
 					<input type="hidden" name="action" value="a8c_developer_lightbox_step_1" />
 
 					<p><label><input type="radio" name="a8c_developer_project_type" value="wporg" checked="checked" /> <?php esc_html_e( 'A normal WordPress.org website', 'a8c-developer' ); ?></label></p>
@@ -357,7 +357,7 @@ class Automattic_Developer {
 				a8c_developer_bind_settings_events();
 			});
 		</script>';
-		
+
 		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( &$this, 'settings_section_plugins' ), $this->settings_page_slug . '_status' );
 		foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
 			if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
@@ -435,7 +435,7 @@ class Automattic_Developer {
 			// Needs to be activated
 			if ( current_user_can('activate_plugins') ) {
 				$path = $this->get_path_for_recommended_plugin( $args['slug'] );
-				echo '<a class="a8c-developer-notactive a8c-developer-button-activate" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';					
+				echo '<a class="a8c-developer-notactive a8c-developer-button-activate" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
 			} else {
 				echo '<span class="a8c-developer-notactive">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</span>';
 			}
@@ -483,11 +483,11 @@ class Automattic_Developer {
     if( $cur->response == 'development' ) {
       echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
     } else {
-      echo '<a href="'. network_admin_url( 'update-core.php' ) .'" class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a>';    
+      echo '<a href="'. network_admin_url( 'update-core.php' ) .'" class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a>';
     }
   }
 
-  public function settings_field_setting_shared_plugins() {	
+  public function settings_field_setting_shared_plugins() {
 		if( file_exists(WP_CONTENT_DIR . '/themes/vip') && file_exists(WP_CONTENT_DIR . '/themes/vip/plugins') ) {
 			echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
 		} else {
