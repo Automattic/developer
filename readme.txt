@@ -17,7 +17,7 @@ The plugin will help you optimize your development environment by making sure th
 
 If you'd like to check out the code and contribute, [join us on github](https://github.com/Automattic/developer), pull requests are more than welcome.
 
-We would like to thank Ejner Galaz for lettign us use the `developer` slug in the WordPress plugin repository.
+We would like to thank Ejner Galaz for letting us use the `developer` slug in the WordPress plugin repository.
 
 == Installation ==
 
