@@ -35,17 +35,17 @@ class Automattic_Developer {
 	private $recommended_constants = array();
 
 	function __construct() {
-		add_action( 'init',           array( &$this, 'init' ) );
-		add_action( 'admin_init',     array( &$this, 'admin_init' ) );
+		add_action( 'init',           array( $this, 'init' ) );
+		add_action( 'admin_init',     array( $this, 'admin_init' ) );
 
-		add_action( 'admin_menu',     array( &$this, 'register_settings_page' ) );
-		add_action( 'admin_bar_menu', array( &$this, 'add_node_to_admin_bar' ) );
+		add_action( 'admin_menu',     array( $this, 'register_settings_page' ) );
+		add_action( 'admin_bar_menu', array( $this, 'add_node_to_admin_bar' ) );
 
-		add_action( 'admin_enqueue_scripts', array( &$this, 'load_settings_page_script_and_style' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'load_settings_page_script_and_style' ) );
 
-		add_action( 'wp_ajax_a8c_developer_lightbox_step_1',  array( &$this, 'ajax_handler' ) );
-		add_action( 'wp_ajax_a8c_developer_install_plugin',   array( &$this, 'ajax_handler' ) );
-		add_action( 'wp_ajax_a8c_developer_activate_plugin',  array( &$this, 'ajax_handler' ) );
+		add_action( 'wp_ajax_a8c_developer_lightbox_step_1',  array( $this, 'ajax_handler' ) );
+		add_action( 'wp_ajax_a8c_developer_install_plugin',   array( $this, 'ajax_handler' ) );
+		add_action( 'wp_ajax_a8c_developer_activate_plugin',  array( $this, 'ajax_handler' ) );
 	}
 
 	// Allows private variables to be read. Basically implements read-only variables.
@@ -130,7 +130,7 @@ class Automattic_Developer {
 			'SAVEQUERIES' => esc_html__( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' ),
 		);
 
-		register_setting( $this->option_name, $this->option_name, array( &$this, 'settings_validate' ) );
+		register_setting( $this->option_name, $this->option_name, array( $this, 'settings_validate' ) );
 
 
 		wp_register_script( 'a8c-developer', plugins_url( 'developer.js', __FILE__ ), array( 'jquery' ), $this->version );
@@ -166,14 +166,14 @@ class Automattic_Developer {
 			if ( ! empty( $_GET['a8cdev_errorsaving'] ) ) {
 				add_settings_error( $this->settings_page_slug, $this->settings_page_slug . '_error_saving', __( 'Error saving settings. Please try again.', 'a8c-developer' ) );
 			} elseif ( current_user_can( 'manage_options' ) ) {
-				add_action( 'admin_enqueue_scripts', array( &$this, 'load_lightbox_scripts_and_styles' ) );
-				add_action( 'admin_footer', array( &$this, 'output_setup_box_html' ) );
+				add_action( 'admin_enqueue_scripts', array( $this, 'load_lightbox_scripts_and_styles' ) );
+				add_action( 'admin_footer', array( $this, 'output_setup_box_html' ) );
 			}
 		}
 	}
 
 	public function register_settings_page() {
-		add_options_page( esc_html__( 'Automattic Developer Helper', 'a8c-developer' ), esc_html__( 'Developer', 'a8c-developer' ), 'manage_options', $this->settings_page_slug, array( &$this, 'settings_page' ) );
+		add_options_page( esc_html__( 'Automattic Developer Helper', 'a8c-developer' ), esc_html__( 'Developer', 'a8c-developer' ), 'manage_options', $this->settings_page_slug, array( $this, 'settings_page' ) );
 	}
 
 	public function add_node_to_admin_bar( $wp_admin_bar ) {
@@ -343,7 +343,7 @@ class Automattic_Developer {
 
 	public function settings_page() {
 		add_settings_section( 'a8c_developer_main', esc_html__( 'Main Configuration', 'a8c-developer' ), '__return_false', $this->settings_page_slug . '_settings' );
-		add_settings_field( 'a8c_developer_project_type', esc_html__( 'Project Type', 'a8c-developer' ), array( &$this, 'settings_field_select' ), $this->settings_page_slug . '_settings', 'a8c_developer_main', array(
+		add_settings_field( 'a8c_developer_project_type', esc_html__( 'Project Type', 'a8c-developer' ), array( $this, 'settings_field_select' ), $this->settings_page_slug . '_settings', 'a8c_developer_main', array(
 			'name'        => 'project_type',
 			'description' => __( 'Are you developing plugins and themes for <a href="http://wordpress.org/">self-hosted blogs</a> or are you working on a <a href="http://vip.wordpess.com/">WordPress.com VIP</a> project?', 'a8c-developer' ),
 			'options'     => array(
@@ -358,28 +358,28 @@ class Automattic_Developer {
 			});
 		</script>';
 
-		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( &$this, 'settings_section_plugins' ), $this->settings_page_slug . '_status' );
+		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( $this, 'settings_section_plugins' ), $this->settings_page_slug . '_status' );
 		foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
 			if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
 				continue;
 
 			$plugin_details = array_merge( array( 'slug' => $plugin_slug ), $plugin_details );
-			add_settings_field( 'a8c_developer_plugin_' . $plugin_slug, $plugin_details['name'], array( &$this, 'settings_field_plugin' ), $this->settings_page_slug . '_status', 'a8c_developer_plugins', $plugin_details );
+			add_settings_field( 'a8c_developer_plugin_' . $plugin_slug, $plugin_details['name'], array( $this, 'settings_field_plugin' ), $this->settings_page_slug . '_status', 'a8c_developer_plugins', $plugin_details );
 		}
 
-		add_settings_section( 'a8c_developer_constants', esc_html__( 'Constants', 'a8c-developer' ), array( &$this, 'settings_section_constants' ), $this->settings_page_slug . '_status' );
+		add_settings_section( 'a8c_developer_constants', esc_html__( 'Constants', 'a8c-developer' ), array( $this, 'settings_section_constants' ), $this->settings_page_slug . '_status' );
 		foreach ( $this->recommended_constants as $constant => $description ) {
-			add_settings_field( 'a8c_developer_constant_' . $constant, $constant, array( &$this, 'settings_field_constant' ), $this->settings_page_slug . '_status', 'a8c_developer_constants', array(
+			add_settings_field( 'a8c_developer_constant_' . $constant, $constant, array( $this, 'settings_field_constant' ), $this->settings_page_slug . '_status', 'a8c_developer_constants', array(
 				'constant'    => $constant,
 				'description' => $description,
 			) );
 		}
 
-		add_settings_section( 'a8c_developer_settings', esc_html__( 'Settings', 'a8c-developer' ), array( &$this, 'settings_section_settings' ), $this->settings_page_slug . '_status' );
-		add_settings_field( 'a8c_developer_setting_permalink_structure', esc_html__( 'Pretty Permalinks', 'a8c-developer' ), array( &$this, 'settings_field_setting_permalink_structure' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
+		add_settings_section( 'a8c_developer_settings', esc_html__( 'Settings', 'a8c-developer' ), array( $this, 'settings_section_settings' ), $this->settings_page_slug . '_status' );
+		add_settings_field( 'a8c_developer_setting_permalink_structure', esc_html__( 'Pretty Permalinks', 'a8c-developer' ), array( $this, 'settings_field_setting_permalink_structure' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
 		if ( 'wpcom-vip' == $this->settings['project_type'] ) {
-      add_settings_field( 'a8c_developer_setting_development_version', esc_html__( 'Development Version', 'a8c-developer' ), array( &$this, 'settings_field_setting_development_version' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
-      add_settings_field( 'a8c_developer_setting_shared_plugins', esc_html__( 'Shared Plugins', 'a8c-developer' ), array( &$this, 'settings_field_setting_shared_plugins' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
+      add_settings_field( 'a8c_developer_setting_development_version', esc_html__( 'Development Version', 'a8c-developer' ), array( $this, 'settings_field_setting_development_version' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
+      add_settings_field( 'a8c_developer_setting_shared_plugins', esc_html__( 'Shared Plugins', 'a8c-developer' ), array( $this, 'settings_field_setting_shared_plugins' ), $this->settings_page_slug . '_status', 'a8c_developer_settings' );
 		}
 
 
