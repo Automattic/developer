@@ -210,7 +210,7 @@ class Automattic_Developer {
 					<?php wp_nonce_field( 'a8c_developer_lightbox_step_1' ); ?>
 					<input type="hidden" name="action" value="a8c_developer_lightbox_step_1" />
 
-					<p><label><input type="radio" name="a8c_developer_project_type" value="wporg" checked="checked" /> <?php esc_html_e( 'A normal WordPress.org website', 'a8c-developer' ); ?></label></p>
+					<p><label><input type="radio" name="a8c_developer_project_type" value="wporg" checked="checked" /> <?php esc_html_e( 'A normal WordPress website', 'a8c-developer' ); ?></label></p>
 					<p><label><input type="radio" name="a8c_developer_project_type" value="wpcom-vip" /> <?php esc_html_e( 'A website hosted on WordPress.com VIP', 'a8c-developer' ); ?></label></p>
 
 					<?php submit_button( null, 'primary', 'a8c-developer-setup-dialog-step-1-submit' ); ?>
@@ -336,12 +336,12 @@ class Automattic_Developer {
 
 	public function settings_page() {
 		add_settings_section( 'a8c_developer_main', esc_html__( 'Main Configuration', 'a8c-developer' ), '__return_false', $this->settings_page_slug . '_settings' );
-		add_settings_field( 'a8c_developer_project_type', esc_html__( 'Project Type', 'a8c-developer' ), array( $this, 'settings_field_select' ), $this->settings_page_slug . '_settings', 'a8c_developer_main', array(
+		add_settings_field( 'a8c_developer_project_type', esc_html__( 'Project Type', 'a8c-developer' ), array( $this, 'settings_field_radio' ), $this->settings_page_slug . '_settings', 'a8c_developer_main', array(
 			'name'        => 'project_type',
-			'description' => __( 'Are you developing plugins and themes for <a href="http://wordpress.org/">self-hosted blogs</a> or are you working on a <a href="http://vip.wordpess.com/">WordPress.com VIP</a> project?', 'a8c-developer' ),
+			'description' => __( '<a href="http://vip.wordpess.com/">WordPress.com VIP</a> projects get different recommendations than WordPress projects hosted elsewhere.', 'a8c-developer' ),
 			'options'     => array(
-				'wporg'     => esc_html__( 'WordPress.org', 'a8c-developer' ),
-				'wpcom-vip' => esc_html__( 'WordPress.com VIP', 'a8c-developer' ),
+				'wporg'     => esc_html__( 'Normal WordPress website', 'a8c-developer' ),
+				'wpcom-vip' => esc_html__( 'Website hosted on WordPress.com VIP', 'a8c-developer' ),
 			),
 		) );
 
@@ -400,6 +400,19 @@ class Automattic_Developer {
 <?php
 	}
 
+	public function settings_field_radio( $args ) {
+		if ( empty( $args['name'] ) || ! is_array( $args['options'] ) )
+			return false;
+
+		$selected = ( isset( $this->settings[ $args['name'] ] ) ) ? $this->settings[ $args['name'] ] : '';
+
+		foreach ( (array) $args['options'] as $value => $label )
+			echo '<p><input type="radio" name="a8c_developer[' . esc_attr( $args['name'] ) . ']" value="' . esc_attr( $value ) . '"' . checked( $value, $selected, false ) . '> ' . $label . '</input></p>';
+
+		if ( ! empty( $args['description'] ) )
+			echo ' <p class="description">' . $args['description'] . '</p>';
+	}
+
 	public function settings_field_select( $args ) {
 		if ( empty( $args['name'] ) || ! is_array( $args['options'] ) )
 			return false;
@@ -414,7 +427,7 @@ class Automattic_Developer {
 		echo '</select>';
 
 		if ( ! empty( $args['description'] ) )
-			echo ' <span class="description">' . $args['description'] . '</span>';
+			echo ' <p class="description">' . $args['description'] . '</p>';
 	}
 
 	public function settings_section_plugins() {
