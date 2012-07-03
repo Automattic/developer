@@ -13,17 +13,17 @@ A plugin, which helps WordPress developers develop.
 
 A plugin, which helps WordPress developers develop.
 
-The plugin will help you optimize your development environment by making sure that you have all the essential tools and plugins installed and available.
+This plugin will help you optimize your development environment by making sure that you have all the essential tools and plugins installed.
 
-If you'd like to check out the code and contribute, [join us on github](https://github.com/Automattic/developer), pull requests are more than welcome.
+If you'd like to check out the code and contribute, [join us on GitHub](https://github.com/Automattic/developer). Pull requests are more than welcome!
 
-We would like to thank Ejner Galaz for letting us use the `developer` slug in the WordPress plugin repository.
+We would like to thank Ejner Galaz for letting us use the `developer` slug in the WordPress.org plugin repository.
 
 == Installation ==
 
 1. Upload the `developer` folder to your plugins directory (e.g. `/wp-content/plugins/`)
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Follow the instructions
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Follow the instructions
 
 == Frequently Asked Questions ==
 
@@ -33,10 +33,10 @@ Because you haven't asked one yet.
 
 == Screenshots ==
 
-1. On activation, the plugin prompts you to check what type of developer you are. This is used to configure the plugins checks.
-1. On activation, the plugin does a quick check to see if you have the necessary developer plugins installed.
-1. With one-click you can download and install and then activate the plugin.
-1. The plugin's settings page (Settings > Developer) will check to make sure your environment is correctly configured including plugins, constants, and other settings.
+1. On activation, the plugin prompts you to specify what type of developer you are. This is used to configure the plugins checks.
+2. On activation, the plugin does a quick check to see if you have essential developer plugins installed.
+3. With one click you can install and activate the plugin.
+4. The plugin's settings page (Settings > Developer) will check to make sure your environment is correctly configured, including plugins, constants, and other settings.
 
 == Changelog ==
 
