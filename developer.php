@@ -91,8 +91,8 @@ class Automattic_Developer {
 			/*
 			'jetpack' => array(
 				'project_type' => 'wpcom-vip',
-				'name'   => esc_html__( 'Jetpack', 'a8c-developer' ),
-				'active' => class_exists( 'Jetpack' ),
+				'name'         => esc_html__( 'Jetpack', 'a8c-developer' ),
+				'active'       => class_exists( 'Jetpack' ),
 			),
 			/**/
 			'grunion-contact-form' => array(
@@ -114,15 +114,8 @@ class Automattic_Developer {
 				'project_type' => 'all',
 				'name'         => esc_html__( 'Beta Tester', 'a8c-developer' ),
 				'active'       => class_exists( 'wp_beta_tester' ),
-				'filename' 		 => 'wp-beta-tester.php',
+				'filename'     => 'wp-beta-tester.php',
 			),
-			/*
-			'foobar' => array(
-				'name'     => 'Dummy Test Plugin',
-				'active'   => false,
-				'filename' => 'blah.php',
-			),
-			/**/
 		);
 
 		$this->recommended_constants = array(
@@ -146,7 +139,7 @@ class Automattic_Developer {
 			'error'          => __( 'Error!', 'a8c-developer' ),
 			'ACTIVE'      	 => __( 'ACTIVE', 'a8c-developer' ),
 			'INSTALLED'      => __( 'INSTALLED', 'a8c-developer' ),
-			'ERROR'      		 => __( 'ERROR!', 'a8c-developer' ),
+			'ERROR'          => __( 'ERROR!', 'a8c-developer' ),
 		);
 		wp_localize_script( 'a8c-developer', 'a8c_developer_i18n', $strings );
 
@@ -183,7 +176,7 @@ class Automattic_Developer {
 			'parent' => 'top-secondary', // Off on the right side
 			'href'   => admin_url( 'options-general.php?page=' . $this->settings_page_slug ),
 			'meta'   => array(
-				'title' => esc_html__( 'View the Automattic Developer Helper settings and status page', 'a8c-developer' ),
+			'title'  => esc_html__( 'View the Automattic Developer Helper settings and status page', 'a8c-developer' ),
 			),
 		) );
 	}
