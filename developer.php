@@ -369,8 +369,8 @@ class Automattic_Developer {
 		add_settings_section( 'a8c_developer_settings', esc_html__( 'Settings', 'a8c-developer' ), array( $this, 'settings_section_settings' ), self::PAGE_SLUG . '_status' );
 		add_settings_field( 'a8c_developer_setting_permalink_structure', esc_html__( 'Pretty Permalinks', 'a8c-developer' ), array( $this, 'settings_field_setting_permalink_structure' ), self::PAGE_SLUG . '_status', 'a8c_developer_settings' );
 		if ( 'wpcom-vip' == $this->settings['project_type'] ) {
-      add_settings_field( 'a8c_developer_setting_development_version', esc_html__( 'Development Version', 'a8c-developer' ), array( $this, 'settings_field_setting_development_version' ), self::PAGE_SLUG . '_status', 'a8c_developer_settings' );
-      add_settings_field( 'a8c_developer_setting_shared_plugins', esc_html__( 'Shared Plugins', 'a8c-developer' ), array( $this, 'settings_field_setting_shared_plugins' ), self::PAGE_SLUG . '_status', 'a8c_developer_settings' );
+			add_settings_field( 'a8c_developer_setting_development_version', esc_html__( 'Development Version', 'a8c-developer' ), array( $this, 'settings_field_setting_development_version' ), self::PAGE_SLUG . '_status', 'a8c_developer_settings' );
+			add_settings_field( 'a8c_developer_setting_shared_plugins', esc_html__( 'Shared Plugins', 'a8c-developer' ), array( $this, 'settings_field_setting_shared_plugins' ), self::PAGE_SLUG . '_status', 'a8c_developer_settings' );
 		}
 
 
@@ -481,18 +481,18 @@ class Automattic_Developer {
 		}
 	}
 
-  public function settings_field_setting_development_version() {
-    $cur = get_preferred_from_update_core();
+	public function settings_field_setting_development_version() {
+		$cur = get_preferred_from_update_core();
 
-    if( $cur->response == 'development' ) {
-      echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
-    } else {
-      echo '<a href="'. network_admin_url( 'update-core.php' ) .'" class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a>';
-    }
-  }
+		if ( $cur->response == 'development' ) {
+			echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
+		} else {
+			echo '<a href="'. network_admin_url( 'update-core.php' ) .'" class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a>';
+		}
+	}
 
-  public function settings_field_setting_shared_plugins() {
-		if( file_exists(WP_CONTENT_DIR . '/themes/vip') && file_exists(WP_CONTENT_DIR . '/themes/vip/plugins') ) {
+	public function settings_field_setting_shared_plugins() {
+		if ( file_exists( WP_CONTENT_DIR . '/themes/vip' ) && file_exists( WP_CONTENT_DIR . '/themes/vip/plugins' ) ) {
 			echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
 		} else {
 			echo '<a href="http://lobby.vip.wordpress.com/getting-started/development-environment/#plugins-and-helper-functions" class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a>';
