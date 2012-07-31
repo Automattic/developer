@@ -40,5 +40,8 @@ Because you haven't asked one yet.
 
 == Changelog ==
 
+= 1.1 (??? ??, 2012) =
+* John Blackbourn's [User Switching](http://wordpress.org/extend/plugins/user-switching/) is now a recommended plugin for all projects.
+
 = 1.0 =
 * Initial Release

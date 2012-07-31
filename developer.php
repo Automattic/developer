@@ -108,6 +108,11 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Monster Widget', 'a8c-developer' ),
 				'active'       => class_exists( 'Monster_Widget' ),
 			),
+			'user-switching' => array(
+				'project_type' => 'all',
+				'name'         => esc_html__( 'User Switching', 'a8c-developer' ),
+				'active'       => class_exists( 'user_switching' ),
+			),
 			'wordpress-beta-tester' => array(
 				'project_type' => 'all',
 				'name'         => esc_html__( 'Beta Tester', 'a8c-developer' ),
