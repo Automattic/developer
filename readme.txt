@@ -27,7 +27,7 @@ We would like to thank Ejner Galaz for letting us use the `developer` slug in th
 
 == Frequently Asked Questions ==
 
-= Why are there no FAQs? =
+= Why are there no FAQs besides this one? =
 
 Because you haven't asked one yet.
 
