@@ -169,7 +169,7 @@ class Automattic_Developer {
 	}
 
 	public function register_settings_page() {
-		add_options_page( esc_html__( 'Automattic Developer Helper', 'a8c-developer' ), esc_html__( 'Developer', 'a8c-developer' ), 'manage_options', self::PAGE_SLUG, array( $this, 'settings_page' ) );
+		add_management_page( esc_html__( 'Automattic Developer Helper', 'a8c-developer' ), esc_html__( 'Developer', 'a8c-developer' ), 'manage_options', self::PAGE_SLUG, array( $this, 'settings_page' ) );
 	}
 
 	public function add_node_to_admin_bar( $wp_admin_bar ) {
@@ -185,7 +185,7 @@ class Automattic_Developer {
 	}
 
 	public function load_settings_page_script_and_style( $hook_suffix ) {
-		if ( 'settings_page_' . self::PAGE_SLUG != $hook_suffix )
+		if ( 'tools_page_' . self::PAGE_SLUG != $hook_suffix )
 			return;
 
 		wp_enqueue_script( 'a8c-developer' );
