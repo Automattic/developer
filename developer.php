@@ -7,7 +7,7 @@ Plugin URI:   http://wordpress.org/extend/plugins/developer/
 Description:  The first stop for every WordPress developer
 Version:      1.0.0
 Author:       Automattic
-Author URI:   http://automattic.com/wordpress-plugins/
+Author URI:   http://automattic.com
 License:      GPLv2 or later
 
 Text Domain:  a8c-developer
@@ -169,7 +169,7 @@ class Automattic_Developer {
 	}
 
 	public function register_settings_page() {
-		add_management_page( esc_html__( 'Automattic Developer Helper', 'a8c-developer' ), esc_html__( 'Developer', 'a8c-developer' ), 'manage_options', self::PAGE_SLUG, array( $this, 'settings_page' ) );
+		add_management_page( esc_html__( 'Developer Helper', 'a8c-developer' ), esc_html__( 'Developer', 'a8c-developer' ), 'manage_options', self::PAGE_SLUG, array( $this, 'settings_page' ) );
 	}
 
 	public function add_node_to_admin_bar( $wp_admin_bar ) {
@@ -179,7 +179,7 @@ class Automattic_Developer {
 			'parent' => 'top-secondary', // Off on the right side
 			'href'   => admin_url( 'options-general.php?page=' . self::PAGE_SLUG ),
 			'meta'   => array(
-			'title'  => esc_html__( 'View the Automattic Developer Helper settings and status page', 'a8c-developer' ),
+			'title'  => esc_html__( 'View the Developer Helper settings and status page', 'a8c-developer' ),
 			),
 		) );
 	}
@@ -205,7 +205,7 @@ class Automattic_Developer {
 
 		<div style="display:none">
 			<div id="a8c-developer-setup-dialog-step-1" class="a8c-developer-dialog">
-				<strong><?php esc_html_e( "Thanks for installing Automattic's Developer helper plugin!", 'a8c-developer' ); ?></strong>
+				<strong><?php esc_html_e( "Thanks for installing the Developer Helper plugin!", 'a8c-developer' ); ?></strong>
 
 				<p><?php esc_html_e( 'Before we begin, what type of website are you developing?', 'a8c-developer' ); ?></p>
 
@@ -386,7 +386,7 @@ class Automattic_Developer {
 
 		<?php screen_icon( 'tools' ); ?>
 
-		<h2><?php esc_html_e( 'Automattic Developer Helper', 'a8c-developer' ); ?></h2>
+		<h2><?php esc_html_e( 'Developer Helper', 'a8c-developer' ); ?></h2>
 
 		<form action="options.php" method="post">
 
