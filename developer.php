@@ -177,7 +177,7 @@ class Automattic_Developer {
 			'id'     => self::PAGE_SLUG,
 			'title'  => esc_html__( 'Developer', 'a8c-developer' ),
 			'parent' => 'top-secondary', // Off on the right side
-			'href'   => admin_url( 'tools.php?page=' . self::PAGE_SLUG ),
+			'href'   => menu_page_url( self::PAGE_SLUG, false ),
 			'meta'   => array(
 			'title'  => esc_html__( 'View the Developer Helper settings and status page', 'a8c-developer' ),
 			),
