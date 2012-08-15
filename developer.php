@@ -447,7 +447,7 @@ class Automattic_Developer {
 		$selected = ( isset( $this->settings[ $args['name'] ] ) ) ? $this->settings[ $args['name'] ] : '';
 
 		foreach ( (array) $args['options'] as $value => $label )
-			echo '<p><input type="radio" name="a8c_developer[' . esc_attr( $args['name'] ) . ']" value="' . esc_attr( $value ) . '"' . checked( $value, $selected, false ) . '> ' . $label . '</input></p>';
+			echo '<p><label><input type="radio" name="a8c_developer[' . esc_attr( $args['name'] ) . ']" value="' . esc_attr( $value ) . '"' . checked( $value, $selected, false ) . '> ' . $label . '</input></label></p>';
 
 		if ( ! empty( $args['description'] ) )
 			echo ' <p class="description">' . $args['description'] . '</p>';
