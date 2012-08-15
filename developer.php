@@ -82,7 +82,7 @@ class Automattic_Developer {
 				'active'       => class_exists( 'Deprecated_Log' ),
 			),
 			'vip-scanner' => array(
-				'project_type' => 'all',
+				'project_type' => 'wpcom-vip',
 				'name'         => esc_html__( 'VIP Scanner', 'a8c-developer' ),
 				'active'       => class_exists( 'VIP_Scanner' ),
 			),
@@ -123,6 +123,33 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Beta Tester', 'a8c-developer' ),
 				'active'       => class_exists( 'wp_beta_tester' ),
 				'filename'     => 'wp-beta-tester.php',
+			),
+
+			// Theme Developer
+			'rtl-tester' => array(
+				'project_type' => 'wporg-theme',
+				'name'         => esc_html__( 'RTL Tester', 'a8c-developer' ),
+				'active'       => false,
+			),
+			'regenerate-thumbnails' => array(
+				'project_type' => 'wporg-theme',
+				'name'         => esc_html__( 'Regenerate Thumbnails', 'a8c-developer' ),
+				'active'       => false,
+			),
+			'reveal-ids' => array(
+				'project_type' => 'wporg-theme',
+				'name'         => esc_html__( 'Reveal IDs', 'a8c-developer' ),
+				'active'       => false,
+			),
+			'theme-test-drive' => array(
+				'project_type' => 'wporg-theme',
+				'name'         => esc_html__( 'Theme Test Drive', 'a8c-developer' ),
+				'active'       => false,
+			),
+			'theme-check' => array(
+				'project_type' => 'wporg-theme',
+				'name'         => esc_html__( 'Theme Check', 'a8c-developer' ),
+				'active'       => false,
 			),
 		);
 
@@ -218,8 +245,16 @@ class Automattic_Developer {
 					<?php wp_nonce_field( 'a8c_developer_lightbox_step_1' ); ?>
 					<input type="hidden" name="action" value="a8c_developer_lightbox_step_1" />
 
-					<p><label><input type="radio" name="a8c_developer_project_type" value="wporg" checked="checked" /> <?php esc_html_e( 'A normal WordPress website', 'a8c-developer' ); ?></label></p>
-					<p><label><input type="radio" name="a8c_developer_project_type" value="wpcom-vip" /> <?php esc_html_e( 'A website hosted on WordPress.com VIP', 'a8c-developer' ); ?></label></p>
+					<?php $i = 0; ?>
+					<?php foreach ( $this->get_project_types() as $project_slug => $project_description ) : ?>
+						<?php $i++; ?>
+						<p>
+							<label>
+								<input type="radio" name="a8c_developer_project_type" value="<?php echo esc_attr( $project_slug ); ?>" <?php checked( $i, 1 ); ?> />
+								<?php echo esc_html( $project_description ); ?>
+							</label>
+						</p>
+					<?php endforeach; ?>
 
 					<?php submit_button( null, 'primary', 'a8c-developer-setup-dialog-step-1-submit' ); ?>
 				</form>
@@ -347,10 +382,7 @@ class Automattic_Developer {
 		add_settings_field( 'a8c_developer_project_type', esc_html__( 'Project Type', 'a8c-developer' ), array( $this, 'settings_field_radio' ), self::PAGE_SLUG . '_settings', 'a8c_developer_main', array(
 			'name'        => 'project_type',
 			'description' => __( '<a href="http://vip.wordpess.com/">WordPress.com VIP</a> projects get different recommendations than WordPress projects hosted elsewhere.', 'a8c-developer' ),
-			'options'     => array(
-				'wporg'     => esc_html__( 'Normal WordPress website', 'a8c-developer' ),
-				'wpcom-vip' => esc_html__( 'Website hosted on WordPress.com VIP', 'a8c-developer' ),
-			),
+			'options'     => $this->get_project_types(),
 		) );
 
 		echo '<script type="text/javascript">
@@ -512,7 +544,11 @@ class Automattic_Developer {
 	public function settings_validate( $raw_settings ) {
 		$settings = array();
 
-		$settings['project_type'] = ( ! empty( $raw_settings['project_type'] ) && 'wpcom-vip' == $raw_settings['project_type'] ) ? 'wpcom-vip' : 'wporg';
+		$project_type_slugs = array_keys( $this->get_project_types() );
+		if ( empty( $raw_settings['project_type'] ) || ! in_array( $raw_settings['project_type'], $project_type_slugs ) )
+			$settings['project_type'] = current( $project_type_slugs );
+		else
+			$settings['project_type'] = $raw_settings['project_type'];
 
 		return $settings;
 	}
@@ -547,6 +583,14 @@ class Automattic_Developer {
 			return true;
 
 		return false;
+	}
+
+	private function get_project_types() {
+		return array(
+			'wporg'     => __( 'Normal WordPress website', 'a8c-developer' ),
+			'wporg-theme' => __( 'Theme for a self-hosted WordPress installation', 'a8c-developer' ),
+			'wpcom-vip' => __( 'Website hosted on WordPress.com VIP', 'a8c-developer' ),
+		);
 	}
 }
 
