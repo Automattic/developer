@@ -41,6 +41,7 @@ Because you haven't asked one yet.
 == Changelog ==
 
 = 1.1 (??? ??, 2012) =
+* New "WP.org Theme" project type for developers building themes for self-hosted installs
 * John Blackbourn's [User Switching](http://wordpress.org/extend/plugins/user-switching/) is now a recommended plugin for all projects.
 
 = 1.0 =
