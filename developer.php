@@ -381,7 +381,7 @@ class Automattic_Developer {
 		add_settings_section( 'a8c_developer_main', esc_html__( 'Main Configuration', 'a8c-developer' ), '__return_false', self::PAGE_SLUG . '_settings' );
 		add_settings_field( 'a8c_developer_project_type', esc_html__( 'Project Type', 'a8c-developer' ), array( $this, 'settings_field_radio' ), self::PAGE_SLUG . '_settings', 'a8c_developer_main', array(
 			'name'        => 'project_type',
-			'description' => __( '<a href="http://vip.wordpess.com/">WordPress.com VIP</a> projects get different recommendations than WordPress projects hosted elsewhere.', 'a8c-developer' ),
+			'description' => '',
 			'options'     => $this->get_project_types(),
 		) );
 
@@ -587,9 +587,9 @@ class Automattic_Developer {
 
 	private function get_project_types() {
 		return array(
-			'wporg'     => __( 'Normal WordPress website', 'a8c-developer' ),
+			'wporg'     => __( 'Plugin for a self-hosted WordPress installation', 'a8c-developer' ),
 			'wporg-theme' => __( 'Theme for a self-hosted WordPress installation', 'a8c-developer' ),
-			'wpcom-vip' => __( 'Website hosted on WordPress.com VIP', 'a8c-developer' ),
+			'wpcom-vip' => __( 'Theme for a <a href="http://vip.wordpress.com" target="_blank">WordPress.com VIP</a> site', 'a8c-developer' ),
 		);
 	}
 }
