@@ -255,7 +255,7 @@ class Automattic_Developer {
 						<p>
 							<label>
 								<input type="radio" name="a8c_developer_project_type" value="<?php echo esc_attr( $project_slug ); ?>" <?php checked( $i, 1 ); ?> />
-								<?php echo esc_html( $project_description ); ?>
+								<?php echo $project_description; ?>
 							</label>
 						</p>
 					<?php endforeach; ?>
@@ -618,9 +618,9 @@ class Automattic_Developer {
 
 	private function get_project_types() {
 		return array(
-			'wporg'     => __( 'Plugin for a self-hosted WordPress installation', 'a8c-developer' ),
+			'wporg'       => __( 'Plugin for a self-hosted WordPress installation', 'a8c-developer' ),
 			'wporg-theme' => __( 'Theme for a self-hosted WordPress installation', 'a8c-developer' ),
-			'wpcom-vip' => __( 'Theme for a <a href="http://vip.wordpress.com" target="_blank">WordPress.com VIP</a> site', 'a8c-developer' ),
+			'wpcom-vip'   => __( 'Theme for a <a href="http://vip.wordpress.com" target="_blank">WordPress.com VIP</a> site', 'a8c-developer' ),
 		);
 	}
 }
