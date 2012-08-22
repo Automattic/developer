@@ -197,7 +197,7 @@ class Automattic_Developer {
 		if ( ! get_option( self::OPTION ) ) {
 			if ( ! empty( $_GET['a8cdev_errorsaving'] ) ) {
 				add_settings_error( self::PAGE_SLUG, self::PAGE_SLUG . '_error_saving', __( 'Error saving settings. Please try again.', 'a8c-developer' ) );
-			} elseif ( current_user_can( 'manage_options' ) ) {
+			} elseif ( ! is_network_admin() && current_user_can( 'manage_options' ) ) {
 				add_action( 'admin_enqueue_scripts', array( $this, 'load_lightbox_scripts_and_styles' ) );
 				add_action( 'admin_footer', array( $this, 'output_setup_box_html' ) );
 			}
