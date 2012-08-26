@@ -205,6 +205,10 @@ class Automattic_Developer {
 	}
 
 	public function add_node_to_admin_bar( $wp_admin_bar ) {
+
+		if ( !current_user_can( 'manage_options' ) )
+			return;
+
 		$wp_admin_bar->add_node( array(
 			'id'     => self::PAGE_SLUG,
 			'title'  => esc_html__( 'Developer', 'a8c-developer' ),
