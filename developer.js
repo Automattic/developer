@@ -59,10 +59,11 @@ function a8c_developer_bind_events() {
 				'plugin_slug': $(button).attr('data-pluginslug')
 			} )
 				.success( function( result ) {
-					if ( '1' == result ) {
+					if ( '1' === result ) {
 						$(button).html( a8c_developer_i18n.installed );
 						$(button).unbind('click').prop('disabled', true);
 					} else {
+						alert( result );
 						$(button).html( a8c_developer_i18n.error );
 					}
 				})
@@ -83,10 +84,11 @@ function a8c_developer_bind_events() {
 				'path': $(button).attr('data-path')
 			} )
 				.success( function( result ) {
-					if ( '1' == result ) {
+					if ( '1' === result ) {
 						$(button).html( a8c_developer_i18n.activated );
 						$(button).unbind('click').prop('disabled', true);
 					} else {
+						alert( result );
 						$(button).html( a8c_developer_i18n.error );
 					}
 				})

@@ -60,6 +60,10 @@ class Automattic_Developer {
 	}
 
 	public function admin_init() {
+		if ( ! empty( $_GET['developer_plugin_reset'] ) && current_user_can( 'manage_options' ) ) {
+			delete_option( self::OPTION );
+		}
+
 		$this->recommended_plugins = array(
 			'debug-bar' => array(
 				'project_type' => 'all',
@@ -193,7 +197,7 @@ class Automattic_Developer {
 		if ( ! get_option( self::OPTION ) ) {
 			if ( ! empty( $_GET['a8cdev_errorsaving'] ) ) {
 				add_settings_error( self::PAGE_SLUG, self::PAGE_SLUG . '_error_saving', __( 'Error saving settings. Please try again.', 'a8c-developer' ) );
-			} elseif ( current_user_can( 'manage_options' ) ) {
+			} elseif ( ! is_network_admin() && current_user_can( 'manage_options' ) ) {
 				add_action( 'admin_enqueue_scripts', array( $this, 'load_lightbox_scripts_and_styles' ) );
 				add_action( 'admin_footer', array( $this, 'output_setup_box_html' ) );
 			}
@@ -255,7 +259,7 @@ class Automattic_Developer {
 						<p>
 							<label>
 								<input type="radio" name="a8c_developer_project_type" value="<?php echo esc_attr( $project_slug ); ?>" <?php checked( $i, 1 ); ?> />
-								<?php echo esc_html( $project_description ); ?>
+								<?php echo $project_description; ?>
 							</label>
 						</p>
 					<?php endforeach; ?>
@@ -328,19 +332,19 @@ class Automattic_Developer {
 
 			case 'a8c_developer_install_plugin':
 				if ( empty( $_POST['plugin_slug'] ) )
-					die( '-1' );
+					die( __( 'ERROR: No slug was passed to the AJAX callback.', 'a8c-developer' ) );
 
 				check_ajax_referer( 'a8c_developer_install_plugin_' . $_POST['plugin_slug'] );
 
 				if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) )
-					die( '-1' );
+					die( __( 'ERROR: You lack permissions to install and/or activate plugins.', 'a8c-developer' ) );
 
 				include_once ( ABSPATH . 'wp-admin/includes/plugin-install.php' );
 
 				$api = plugins_api( 'plugin_information', array( 'slug' => $_POST['plugin_slug'], 'fields' => array( 'sections' => false ) ) );
 
 				if ( is_wp_error( $api ) )
-					die( '-1' );
+					die( sprintf( __( 'ERROR: Error fetching plugin information: %s', 'a8c-developer' ), get_error_message( $api ) ) );
 
 				$upgrader = new Plugin_Upgrader( new Automattic_Developer_Empty_Upgrader_Skin( array(
 					'nonce'  => 'install-plugin_' . $_POST['plugin_slug'],
@@ -351,28 +355,28 @@ class Automattic_Developer {
 				$install_result = $upgrader->install( $api->download_link );
 
 				if ( ! $install_result || is_wp_error( $install_result ) )
-					die( '-1' );
+					die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'a8c-developer' ), get_error_message( $api ) ) );
 
 				$activate_result = activate_plugin( $this->get_path_for_recommended_plugin( $_POST['plugin_slug'] ) );
 
 				if ( is_wp_error( $activate_result ) )
-					die( '-1' );
+					die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), get_error_message( $api ) ) );
 
 				exit( '1' );
 
 			case 'a8c_developer_activate_plugin':
 				if ( empty( $_POST['path'] ) )
-					die( '-1' );
+					die( __( 'ERROR: No slug was passed to the AJAX callback.', 'a8c-developer' ) );
 
 				check_ajax_referer( 'a8c_developer_activate_plugin_' . $_POST['path'] );
 
 				if ( ! current_user_can( 'activate_plugins' ) )
-					die( '-1' );
+					die( __( 'ERROR: You lack permissions to activate plugins.', 'a8c-developer' ) );
 
 				$activate_result = activate_plugin( $_POST['path'] );
 
 				if ( is_wp_error( $activate_result ) )
-					die( '-1' );
+					die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), get_error_message( $api ) ) );
 
 				exit( '1' );
 		}
@@ -618,9 +622,9 @@ class Automattic_Developer {
 
 	private function get_project_types() {
 		return array(
-			'wporg'     => __( 'Plugin for a self-hosted WordPress installation', 'a8c-developer' ),
+			'wporg'       => __( 'Plugin for a self-hosted WordPress installation', 'a8c-developer' ),
 			'wporg-theme' => __( 'Theme for a self-hosted WordPress installation', 'a8c-developer' ),
-			'wpcom-vip' => __( 'Theme for a <a href="http://vip.wordpress.com" target="_blank">WordPress.com VIP</a> site', 'a8c-developer' ),
+			'wpcom-vip'   => __( 'Theme for a <a href="http://vip.wordpress.com" target="_blank">WordPress.com VIP</a> site', 'a8c-developer' ),
 		);
 	}
 }
