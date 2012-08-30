@@ -117,7 +117,7 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'User Switching', 'a8c-developer' ),
 				'active'       => class_exists( 'user_switching' ),
 			),
-			'pig-latin' => array(
+			'piglatin' => array(
 				'project_type' 	=> 'all',
 				'name'		=> esc_html__( 'Pig Latin', 'a8c-developer' ),
 				'active'	=> class_exists( 'PigLatin' ),
