@@ -36,7 +36,7 @@ Because you haven't asked one yet.
 1. On activation, the plugin prompts you to specify what type of developer you are. This is used to configure the plugins checks.
 2. On activation, the plugin does a quick check to see if you have essential developer plugins installed.
 3. With one click you can install and activate the plugin.
-4. The plugin's settings page (Settings > Developer) will check to make sure your environment is correctly configured, including plugins, constants, and other settings.
+4. The plugin's settings page (Tools > Developer) will check to make sure your environment is correctly configured, including plugins, constants, and other settings.
 
 == Changelog ==
 
