@@ -3,7 +3,7 @@ Contributors: automattic, batmoo, Viper007Bond, nbachiyski, tott, danielbachhube
 Tags: developer, development, local
 Requires at least: 3.4
 Tested up to: 3.4.1
-Stable tag: 1.1
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,6 +39,10 @@ Because you haven't asked one yet.
 4. The plugin's settings page (Tools > Developer) will check to make sure your environment is correctly configured, including plugins, constants, and other settings.
 
 == Changelog ==
+
+= 1.1.1 (2012-08-30) =
+
+* Fix piglatin slug, props bobbingwide
 
 = 1.1 (2012-08-30) =
 * New "WP.org Theme" project type for developers building themes for self-hosted installs with a number of sweet plugins recommended by the WordPress.com Theme Team.
