@@ -15,7 +15,7 @@ A plugin, which helps WordPress developers develop.
 
 This plugin will help you optimize your development environment by making sure that you have all the essential tools and plugins installed.
 
-If you'd like to check out the code and contribute, [join us on GitHub](https://github.com/Automattic/developer). Pull requests are more than welcome!
+If you'd like to check out the code and contribute, [join us on GitHub](https://github.com/Automattic/developer). Pull requests, issues, and plugin recommendations are more than welcome!
 
 We would like to thank Ejner Galaz for letting us use the `developer` slug in the WordPress.org plugin repository.
 
@@ -40,9 +40,13 @@ Because you haven't asked one yet.
 
 == Changelog ==
 
-= 1.1 (??? ??, 2012) =
-* New "WP.org Theme" project type for developers building themes for self-hosted installs
-* John Blackbourn's [User Switching](http://wordpress.org/extend/plugins/user-switching/) is now a recommended plugin for all projects.
+= 1.1 (2012-08-30) =
+* New "WP.org Theme" project type for developers building themes for self-hosted installs with a number of sweet plugins recommended by the WordPress.com Theme Team.
+* Simplify some of the wording across the plugin.
+* Added John Blackbourn's [User Switching](http://wordpress.org/extend/plugins/user-switching/) is now a recommended plugin for all projects.
+* Added [Pig Latin](http://wordpress.org/extend/plugins/pig-latin) plugin to help developer i18n their code.
+* Added resources for all projects.
+* Bug fix: don't show installation prompt in network admin.
 
 = 1.0 =
 * Initial Release
