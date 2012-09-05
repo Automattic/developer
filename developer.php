@@ -249,7 +249,7 @@ class Automattic_Developer {
 
 				<p><?php esc_html_e( 'Before we begin, what type of website are you developing?', 'a8c-developer' ); ?></p>
 
-				<form id="a8c-developer-setup-dialog-step-1-form" action="options-general.php?page=a8c_developer" method="post">
+				<form id="a8c-developer-setup-dialog-step-1-form" action="tools.php?page=a8c_developer" method="post">
 					<?php wp_nonce_field( 'a8c_developer_lightbox_step_1' ); ?>
 					<input type="hidden" name="action" value="a8c_developer_lightbox_step_1" />
 
