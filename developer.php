@@ -339,7 +339,7 @@ class Automattic_Developer {
 				$api = plugins_api( 'plugin_information', array( 'slug' => $_POST['plugin_slug'], 'fields' => array( 'sections' => false ) ) );
 
 				if ( is_wp_error( $api ) )
-					die( sprintf( __( 'ERROR: Error fetching plugin information: %s', 'a8c-developer' ), get_error_message( $api ) ) );
+					die( sprintf( __( 'ERROR: Error fetching plugin information: %s', 'a8c-developer' ), $api->get_error_message() ) );
 
 				$upgrader = new Plugin_Upgrader( new Automattic_Developer_Empty_Upgrader_Skin( array(
 					'nonce'  => 'install-plugin_' . $_POST['plugin_slug'],
@@ -350,12 +350,12 @@ class Automattic_Developer {
 				$install_result = $upgrader->install( $api->download_link );
 
 				if ( ! $install_result || is_wp_error( $install_result ) )
-					die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'a8c-developer' ), get_error_message( $api ) ) );
+					die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'a8c-developer' ), $install_result->get_error_message() ) );
 
 				$activate_result = activate_plugin( $this->get_path_for_recommended_plugin( $_POST['plugin_slug'] ) );
 
 				if ( is_wp_error( $activate_result ) )
-					die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), get_error_message( $api ) ) );
+					die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), $activate_result->get_error_message() ) );
 
 				exit( '1' );
 
@@ -371,7 +371,7 @@ class Automattic_Developer {
 				$activate_result = activate_plugin( $_POST['path'] );
 
 				if ( is_wp_error( $activate_result ) )
-					die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), get_error_message( $api ) ) );
+					die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), $activate_result->get_error_message() ) );
 
 				exit( '1' );
 		}
