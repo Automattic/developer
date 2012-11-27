@@ -169,7 +169,6 @@ class Automattic_Developer {
 
 		register_setting( self::OPTION, self::OPTION, array( $this, 'settings_validate' ) );
 
-
 		wp_register_script( 'a8c-developer', plugins_url( 'developer.js', __FILE__ ), array( 'jquery' ), self::VERSION );
 		$strings = array(
 			'settings_slug'  => self::PAGE_SLUG,
@@ -189,14 +188,10 @@ class Automattic_Developer {
 
 		wp_register_style( 'a8c-developer', plugins_url( 'developer.css', __FILE__ ), array(), self::VERSION );
 
-
 		// Handle the submission of the lightbox form if step 2 won't be shown
-		if ( ! empty( $_POST['a8c_developer_action'] ) ) {
-			if ( 'lightbox_step_1' == $_POST['a8c_developer_action'] && ! empty( $_POST['a8c_developer_project_type'] ) && check_admin_referer( 'a8c_developer_action_lightbox_step_1' ) ) {
-				$this->save_project_type( $_POST['a8c_developer_project_type'] );
-
-				add_settings_error( 'general', 'settings_updated', __( 'Settings saved.' ), 'updated' );
-			}
+		if ( ! empty( $_POST['action'] ) && 'a8c_developer_lightbox_step_1' == $_POST['action'] && ! empty( $_POST['a8c_developer_project_type'] ) && check_admin_referer( 'a8c_developer_lightbox_step_1' ) ) {
+			$this->save_project_type( $_POST['a8c_developer_project_type'] );
+			add_settings_error( 'general', 'settings_updated', __( 'Settings saved.' ), 'updated' );
 		}
 
 		if ( ! get_option( self::OPTION ) ) {
@@ -254,7 +249,7 @@ class Automattic_Developer {
 
 				<p><?php esc_html_e( 'Before we begin, what type of website are you developing?', 'a8c-developer' ); ?></p>
 
-				<form id="a8c-developer-setup-dialog-step-1-form" action="options-general.php?page=a8c_developer" method="post">
+				<form id="a8c-developer-setup-dialog-step-1-form" action="tools.php?page=a8c_developer" method="post">
 					<?php wp_nonce_field( 'a8c_developer_lightbox_step_1' ); ?>
 					<input type="hidden" name="action" value="a8c_developer_lightbox_step_1" />
 
