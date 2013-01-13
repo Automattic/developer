@@ -5,7 +5,7 @@
 Plugin Name:  Developer
 Plugin URI:   http://wordpress.org/extend/plugins/developer/
 Description:  The first stop for every WordPress developer
-Version:      1.1.1
+Version:      1.1.2-alpha
 Author:       Automattic
 Author URI:   http://automattic.com
 License:      GPLv2 or later
@@ -25,7 +25,7 @@ class Automattic_Developer {
 	public $settings               = array();
 	public $default_settings       = array();
 
-	const VERSION                  = '1.1.1';
+	const VERSION                  = '1.1.2-alpha';
 	const OPTION                   = 'a8c_developer';
 	const PAGE_SLUG                = 'a8c_developer';
 
