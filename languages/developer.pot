@@ -1,0 +1,347 @@
+# Copyright (C) 2013 Developer
+# This file is distributed under the same license as the Developer package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Developer 1.1.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/developer\n"
+"POT-Creation-Date: 2013-01-13 22:21:53+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2013-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: developer.php:70
+msgid "Debug Bar"
+msgstr ""
+
+#: developer.php:75
+msgid "Debug Bar Cron"
+msgstr ""
+
+#: developer.php:80
+msgid "Rewrite Rules Inspector"
+msgstr ""
+
+#: developer.php:85
+msgid "Log Deprecated Notices"
+msgstr ""
+
+#: developer.php:90
+msgid "VIP Scanner"
+msgstr ""
+
+#: developer.php:102
+msgid "Grunion Contact Form"
+msgstr ""
+
+#: developer.php:107
+msgid "Polldaddy Polls & Ratings"
+msgstr ""
+
+#: developer.php:112
+msgid "Monster Widget"
+msgstr ""
+
+#: developer.php:117
+msgid "User Switching"
+msgstr ""
+
+#: developer.php:122
+msgid "Pig Latin"
+msgstr ""
+
+#: developer.php:127
+msgid "Beta Tester"
+msgstr ""
+
+#: developer.php:135
+msgid "RTL Tester"
+msgstr ""
+
+#: developer.php:140
+msgid "Regenerate Thumbnails"
+msgstr ""
+
+#: developer.php:145
+msgid "Reveal IDs"
+msgstr ""
+
+#: developer.php:150
+msgid "Theme Test Drive"
+msgstr ""
+
+#: developer.php:155
+msgid "Theme Check"
+msgstr ""
+
+#: developer.php:161
+msgid ""
+"Enables <a href=\"http://codex.wordpress.org/Debugging_in_WordPress\" target="
+"\"_blank\">debug mode</a> which helps identify and resolve issues"
+msgstr ""
+
+#: developer.php:162
+msgid ""
+"Logs database queries to an array so you can review them. The Debug Bar "
+"plugin will list out database queries if you set this constant."
+msgstr ""
+
+#: developer.php:172
+msgid "Developer: Plugin Setup"
+msgstr ""
+
+#: developer.php:173
+msgid "Saving..."
+msgstr ""
+
+#: developer.php:174
+msgid "Installing..."
+msgstr ""
+
+#: developer.php:175
+msgid "Installed"
+msgstr ""
+
+#: developer.php:176
+msgid "Activating..."
+msgstr ""
+
+#: developer.php:177
+msgid "Activated"
+msgstr ""
+
+#: developer.php:178
+msgid "Error!"
+msgstr ""
+
+#: developer.php:179 developer.php:500
+msgid "ACTIVE"
+msgstr ""
+
+#: developer.php:180
+msgid "INSTALLED"
+msgstr ""
+
+#: developer.php:181
+msgid "ERROR!"
+msgstr ""
+
+#: developer.php:193
+msgid "Settings saved."
+msgstr ""
+
+#: developer.php:199
+msgid "Error saving settings. Please try again."
+msgstr ""
+
+#: developer.php:208 developer.php:447
+msgid "Developer Helper"
+msgstr ""
+
+#. #-#-#-#-#  plugin.pot (Developer 1.1.1)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: developer.php:208 developer.php:218
+msgid "Developer"
+msgstr ""
+
+#: developer.php:222
+msgid "View the Developer Helper settings and status page"
+msgstr ""
+
+#: developer.php:248
+msgid "Thanks for installing the Developer Helper plugin!"
+msgstr ""
+
+#: developer.php:250
+msgid "Before we begin, what type of website are you developing?"
+msgstr ""
+
+#: developer.php:306 developer.php:403
+msgid "Plugins"
+msgstr ""
+
+#: developer.php:308
+msgid "We recommend that you also install and activate the following plugins:"
+msgstr ""
+
+#: developer.php:321
+msgid "Activate"
+msgstr ""
+
+#: developer.php:323
+msgid "Install"
+msgstr ""
+
+#: developer.php:335 developer.php:369
+msgid "ERROR: No slug was passed to the AJAX callback."
+msgstr ""
+
+#: developer.php:340
+msgid "ERROR: You lack permissions to install and/or activate plugins."
+msgstr ""
+
+#: developer.php:347
+msgid "ERROR: Error fetching plugin information: %s"
+msgstr ""
+
+#: developer.php:358
+msgid "ERROR: Failed to install plugin: %s"
+msgstr ""
+
+#: developer.php:363 developer.php:379
+msgid "ERROR: Failed to activate plugin: %s"
+msgstr ""
+
+#: developer.php:374
+msgid "ERROR: You lack permissions to activate plugins."
+msgstr ""
+
+#: developer.php:389
+msgid "Main Configuration"
+msgstr ""
+
+#: developer.php:390
+msgid "Project Type"
+msgstr ""
+
+#: developer.php:413
+msgid "Constants"
+msgstr ""
+
+#: developer.php:422
+msgid "Settings"
+msgstr ""
+
+#: developer.php:423
+msgid "Pretty Permalinks"
+msgstr ""
+
+#: developer.php:425
+msgid "Development Version"
+msgstr ""
+
+#: developer.php:426
+msgid "Shared Plugins"
+msgstr ""
+
+#: developer.php:430
+msgid "Resources"
+msgstr ""
+
+#: developer.php:432
+msgid "Codex"
+msgstr ""
+
+#: developer.php:435
+msgid "VIP Lobby"
+msgstr ""
+
+#: developer.php:438
+msgid "Starter Themes"
+msgstr ""
+
+#: developer.php:495
+msgid "We recommend you have the following plugins installed:"
+msgstr ""
+
+#: developer.php:505
+msgid "Click here to activate"
+msgstr ""
+
+#: developer.php:505 developer.php:507
+msgid "INACTIVE"
+msgstr ""
+
+#: developer.php:512
+msgid "Click here to install"
+msgstr ""
+
+#: developer.php:512 developer.php:514
+msgid "NOT INSTALLED"
+msgstr ""
+
+#: developer.php:520
+msgid ""
+"We recommend you set the following constants to <code>true</code> in your "
+"<code>wp-config.php</code> file. <a href=\"http://codex.wordpress.org/"
+"Editing_wp-config.php\" target=\"_blank\">Need help?</a>"
+msgstr ""
+
+#: developer.php:525
+msgid "SET"
+msgstr ""
+
+#: developer.php:527
+msgid "NOT SET"
+msgstr ""
+
+#: developer.php:536
+msgid "We recommend the following settings and configurations."
+msgstr ""
+
+#: developer.php:541 developer.php:551 developer.php:559
+msgid "ENABLED"
+msgstr ""
+
+#: developer.php:543 developer.php:553 developer.php:561
+msgid "DISABLED"
+msgstr ""
+
+#: developer.php:543
+msgid ""
+"<a href=\"http://codex.wordpress.org/Using_Permalinks\" target=\"_blank"
+"\">Need help?</a>"
+msgstr ""
+
+#: developer.php:568
+msgid ""
+"The <a href='http://codex.wordpress.org/Developer_Documentation'>Developer "
+"Documentation section</a> of the Codex offers guidelines and references for "
+"anyone wishing to modify, extend, or contribute to WordPress."
+msgstr ""
+
+#: developer.php:572
+msgid ""
+"The <a href='http://lobby.vip.wordpress.com'>VIP Lobby</a> is a technical "
+"documentation resource for developing sites on WordPress.com including best "
+"practices and helpful tips to help you code better, faster, and stronger."
+msgstr ""
+
+#: developer.php:576
+msgid ""
+"<a href='http://underscores.me'>_s (or underscores)</a>: a starter theme "
+"meant for hacking that will give you a \"1000-Hour Head Start\". Use it to "
+"create the next, most awesome WordPress theme out there."
+msgstr ""
+
+#: developer.php:625
+msgid "Plugin for a self-hosted WordPress installation"
+msgstr ""
+
+#: developer.php:626
+msgid "Theme for a self-hosted WordPress installation"
+msgstr ""
+
+#: developer.php:627
+msgid ""
+"Theme for a <a href=\"http://vip.wordpress.com\" target=\"_blank\">WordPress."
+"com VIP</a> site"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://wordpress.org/extend/plugins/developer/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "The first stop for every WordPress developer"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Automattic"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://automattic.com"
+msgstr ""

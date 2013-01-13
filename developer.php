@@ -52,6 +52,9 @@ class Automattic_Developer {
 	}
 
 	public function init() {
+
+		load_plugin_textdomain( 'a8c-developer', null, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
 		$this->default_settings = array(
 			'project_type' => false,
 		);
