@@ -5,7 +5,7 @@
 Plugin Name:  Developer
 Plugin URI:   http://wordpress.org/extend/plugins/developer/
 Description:  The first stop for every WordPress developer
-Version:      1.1.1
+Version:      1.1.2-alpha
 Author:       Automattic
 Author URI:   http://automattic.com
 License:      GPLv2 or later
@@ -24,7 +24,7 @@ class Automattic_Developer {
 	public $settings               = array();
 	public $default_settings       = array();
 
-	const VERSION                  = '1.1.1';
+	const VERSION                  = '1.1.2-alpha';
 	const OPTION                   = 'a8c_developer';
 	const PAGE_SLUG                = 'a8c_developer';
 
@@ -57,6 +57,9 @@ class Automattic_Developer {
 	}
 
 	public function init() {
+
+		load_plugin_textdomain( 'a8c-developer', null, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
 		$this->default_settings = array(
 			'project_type' => false,
 		);
@@ -344,7 +347,7 @@ class Automattic_Developer {
 				$api = plugins_api( 'plugin_information', array( 'slug' => $_POST['plugin_slug'], 'fields' => array( 'sections' => false ) ) );
 
 				if ( is_wp_error( $api ) )
-					die( sprintf( __( 'ERROR: Error fetching plugin information: %s', 'a8c-developer' ), get_error_message( $api ) ) );
+					die( sprintf( __( 'ERROR: Error fetching plugin information: %s', 'a8c-developer' ), $api->get_error_message( $api ) ) );
 
 				$upgrader = new Plugin_Upgrader( new Automattic_Developer_Empty_Upgrader_Skin( array(
 					'nonce'  => 'install-plugin_' . $_POST['plugin_slug'],
@@ -355,12 +358,12 @@ class Automattic_Developer {
 				$install_result = $upgrader->install( $api->download_link );
 
 				if ( ! $install_result || is_wp_error( $install_result ) )
-					die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'a8c-developer' ), get_error_message( $api ) ) );
+					die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'a8c-developer' ), $install_result->get_error_message( $install_result ) ) );
 
 				$activate_result = activate_plugin( $this->get_path_for_recommended_plugin( $_POST['plugin_slug'] ) );
 
 				if ( is_wp_error( $activate_result ) )
-					die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), get_error_message( $api ) ) );
+					die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), $activate_result->get_error_message( $activate_result ) ) );
 
 				exit( '1' );
 
@@ -376,7 +379,7 @@ class Automattic_Developer {
 				$activate_result = activate_plugin( $_POST['path'] );
 
 				if ( is_wp_error( $activate_result ) )
-					die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), get_error_message( $api ) ) );
+					die( sprintf( __( 'ERROR: Failed to activate plugin: %s', 'a8c-developer' ), $activate_result->get_error_message( $activate_result ) ) );
 
 				exit( '1' );
 		}
