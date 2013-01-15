@@ -14,7 +14,6 @@ Text Domain:  a8c-developer
 Domain Path:  /languages/
 
 **************************************************************************/
-
 // Load helper class if installing a plugin
 if ( ! empty( $_POST['action'] ) && 'a8c_developer_install_plugin' == $_POST['action'] )
 	require_once( dirname( __FILE__ ) . '/includes/class-empty-upgrader-skin.php' );
@@ -33,17 +32,23 @@ class Automattic_Developer {
 	private $recommended_constants = array();
 
 	function __construct() {
-		add_action( 'init',           array( $this, 'init' ) );
-		add_action( 'admin_init',     array( $this, 'admin_init' ) );
+		add_action( 'init', 		array( $this, 'load_plugin_textdomain') );
+		add_action( 'init',		array( $this, 'init' ) );
+		add_action( 'admin_init',	array( $this, 'admin_init' ) );
 
-		add_action( 'admin_menu',     array( $this, 'register_settings_page' ) );
-		add_action( 'admin_bar_menu', array( $this, 'add_node_to_admin_bar' ) );
+		add_action( 'admin_menu',	array( $this, 'register_settings_page' ) );
+		add_action( 'admin_bar_menu',  array( $this, 'add_node_to_admin_bar' ) );
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'load_settings_page_script_and_style' ) );
+		add_action( 'admin_enqueue_scripts',  array( $this, 'load_settings_page_script_and_style' ) );
 
 		add_action( 'wp_ajax_a8c_developer_lightbox_step_1',  array( $this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_a8c_developer_install_plugin',   array( $this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_a8c_developer_activate_plugin',  array( $this, 'ajax_handler' ) );
+	}
+
+	// Internationalization
+	function load_plugin_textdomain () {
+		load_plugin_textdomain ( 'a8c-developer', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 
 	// Allows private variables to be read. Basically implements read-only variables.
