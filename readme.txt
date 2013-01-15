@@ -40,6 +40,9 @@ Because you haven't asked one yet.
 
 == Changelog ==
 
+= 1.1.2 (????-??-??) =
+* French localization. Props [fxbenard](https://github.com/fxbenard)
+
 = 1.1.1 (2012-08-30) =
 
 * Fix piglatin slug, props bobbingwide
