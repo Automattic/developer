@@ -146,9 +146,9 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Regenerate Thumbnails', 'a8c-developer' ),
 				'active'       => false,
 			),
-			'reveal-ids' => array(
+			'simply-show-ids' => array(
 				'project_type' => 'wporg-theme',
-				'name'         => esc_html__( 'Reveal IDs', 'a8c-developer' ),
+				'name'         => esc_html__( 'Simply Show IDs', 'a8c-developer' ),
 				'active'       => false,
 			),
 			'theme-test-drive' => array(
