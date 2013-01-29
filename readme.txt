@@ -2,7 +2,7 @@
 Contributors: automattic, batmoo, Viper007Bond, nbachiyski, tott, danielbachhuber, betzster, nprasath002
 Tags: developer, development, local
 Requires at least: 3.4
-Tested up to: 3.4.1
+Tested up to: 3.5.1
 Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
