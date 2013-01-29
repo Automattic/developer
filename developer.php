@@ -139,27 +139,27 @@ class Automattic_Developer {
 			'rtl-tester' => array(
 				'project_type' => 'wporg-theme',
 				'name'         => esc_html__( 'RTL Tester', 'a8c-developer' ),
-				'active'       => false,
+				'active'       => class_exists( 'RTLTester' ),
 			),
 			'regenerate-thumbnails' => array(
 				'project_type' => 'wporg-theme',
 				'name'         => esc_html__( 'Regenerate Thumbnails', 'a8c-developer' ),
-				'active'       => false,
+				'active'       => class_exists( 'RegenerateThumbnails' ),
 			),
 			'simply-show-ids' => array(
 				'project_type' => 'wporg-theme',
 				'name'         => esc_html__( 'Simply Show IDs', 'a8c-developer' ),
-				'active'       => false,
+				'active'       => function_exists( 'ssid_add' ),
 			),
 			'theme-test-drive' => array(
 				'project_type' => 'wporg-theme',
 				'name'         => esc_html__( 'Theme Test Drive', 'a8c-developer' ),
-				'active'       => false,
+				'active'       => function_exists( 'TTD_filters' ),
 			),
 			'theme-check' => array(
 				'project_type' => 'wporg-theme',
 				'name'         => esc_html__( 'Theme Check', 'a8c-developer' ),
-				'active'       => false,
+				'active'       => function_exists( 'tc_add_headers' ),
 			),
 		);
 

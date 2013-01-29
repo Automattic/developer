@@ -43,6 +43,7 @@ Because you haven't asked one yet.
 = 1.1.2 (????-??-??) =
 * French localization. Props [fxbenard](https://github.com/fxbenard)
 * Replaced Reveal IDs with Simply Show IDs. The former never installed.
+* Bug fix: Show a few plugins as active when they're actually active.
 
 = 1.1.1 (2012-08-30) =
 
