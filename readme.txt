@@ -3,7 +3,7 @@ Contributors: automattic, batmoo, Viper007Bond, nbachiyski, tott, danielbachhube
 Tags: developer, development, local
 Requires at least: 3.4
 Tested up to: 3.5.1
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,7 +40,7 @@ Because you haven't asked one yet.
 
 == Changelog ==
 
-= 1.1.2 (????-??-??) =
+= 1.1.2 (2013-01-29) =
 * French localization. Props [fxbenard](https://github.com/fxbenard)
 * Replaced Reveal IDs with Simply Show IDs. The former never installed.
 * Bug fix: Show a few plugins as active when they're actually active.
