@@ -81,6 +81,11 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Debug Bar Cron', 'a8c-developer' ),
 				'active'       => function_exists( 'zt_add_debug_bar_cron_panel' ),
 			),
+			'debug-bar-extender' => array(
+				'project_type' => 'all',
+				'name'         => esc_html__( 'Debug Bar Extender', 'a8c-developer' ),
+				'active'       => class_exists( 'Debug_Bar_Extender' ),
+			),
 			'rewrite-rules-inspector' => array(
 				'project_type' 	=> 'all',
 				'name' 		=> esc_html__( 'Rewrite Rules Inspector', 'a8c-developer' ),
