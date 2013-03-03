@@ -438,7 +438,7 @@ class Automattic_Developer {
 		add_settings_field( 'a8c_developer_setting_codex', esc_html__( 'Codex', 'a8c-developer' ), array( $this, 'settings_field_setting_resource_codex' ), self::PAGE_SLUG . '_status', 'a8c_developer_resources' );
 
 		if ( 'wpcom-vip' == $this->settings['project_type'] )
-			add_settings_field( 'a8c_developer_setting_vip_lobby', esc_html__( 'VIP Lobby', 'a8c-developer' ), array( $this, 'settings_field_setting_resource_vip_lobby' ), self::PAGE_SLUG . '_status', 'a8c_developer_resources' );
+			add_settings_field( 'a8c_developer_setting_vip_docs', esc_html__( 'VIP Docs', 'a8c-developer' ), array( $this, 'settings_field_setting_resource_vip_docs' ), self::PAGE_SLUG . '_status', 'a8c_developer_resources' );
 
 		if ( in_array( $this->settings['project_type'], array( 'wporg-theme', 'wpcom-vip' ) ) )
 			add_settings_field( 'a8c_developer_setting_starter_themes', esc_html__( 'Starter Themes', 'a8c-developer' ), array( $this, 'settings_field_setting_resource_starter_themes' ), self::PAGE_SLUG . '_status', 'a8c_developer_resources' );
@@ -564,7 +564,7 @@ class Automattic_Developer {
 		if ( file_exists( WP_CONTENT_DIR . '/themes/vip' ) && file_exists( WP_CONTENT_DIR . '/themes/vip/plugins' ) ) {
 			echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
 		} else {
-			echo '<a href="http://lobby.vip.wordpress.com/getting-started/development-environment/#plugins-and-helper-functions" class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a>';
+			echo '<a href="http://vip.wordpress.com/documentation/development-environment/#plugins-and-helper-functions" class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a>';
 		}
 	}
 
@@ -574,8 +574,8 @@ class Automattic_Developer {
 		_e( "The <a href='http://codex.wordpress.org/Developer_Documentation'>Developer Documentation section</a> of the Codex offers guidelines and references for anyone wishing to modify, extend, or contribute to WordPress.", 'a8c-developer' );
 	}
 
-	public function settings_field_setting_resource_vip_lobby() {
-		_e( "The <a href='http://lobby.vip.wordpress.com'>VIP Lobby</a> is a technical documentation resource for developing sites on WordPress.com including best practices and helpful tips to help you code better, faster, and stronger.", 'a8c-developer' );
+	public function settings_field_setting_resource_vip_docs() {
+		_e( "The <a href='http://vip.wordpress.com/documentation/'>VIP Documentation</a> is a technical resource for developing sites on WordPress.com including best practices and helpful tips to help you code better, faster, and stronger.", 'a8c-developer' );
 	}
 
 	public function settings_field_setting_resource_starter_themes() {
