@@ -11,3 +11,9 @@
 	font-weight: bold;
 	color: maroon;
 }
+
+.a8c-developer-action-result.error {
+	color: red;
+	font-style: italic;
+	padding-left: 5px;
+}
