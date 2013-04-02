@@ -96,6 +96,11 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Log Deprecated Notices', 'a8c-developer' ),
 				'active'       => class_exists( 'Deprecated_Log' ),
 			),
+			'log-viewer' => array(
+				'project_type' => 'all',
+				'name'         => esc_html__( 'Log Viewer', 'a8c-developer' ),
+				'active'       => class_exists( 'ciLogViewer' ),
+			),
 			'vip-scanner' => array(
 				'project_type' => 'wpcom-vip',
 				'name'         => esc_html__( 'VIP Scanner', 'a8c-developer' ),
