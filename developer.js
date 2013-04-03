@@ -5,7 +5,7 @@ function a8c_developer_lightbox() {
 				inline: true,
 				href: href,
 				title: a8c_developer_i18n.lightbox_title,
-				innerWidth: 500,
+				innerWidth: 650,
 				maxHeight: '100%',
 				transition: transition
 			});

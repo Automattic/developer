@@ -2,6 +2,11 @@
 	margin: 25px;
 }
 
+.a8c-developer-dialog .recommended-plugins td {
+	vertical-align: top;
+	padding-bottom: 10px;
+}
+
 .a8c-developer-active {
 	font-weight: bold;
 	color: green;

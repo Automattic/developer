@@ -5,7 +5,7 @@
 Plugin Name:  Developer
 Plugin URI:   http://wordpress.org/extend/plugins/developer/
 Description:  The first stop for every WordPress developer
-Version:      1.1.2
+Version:      1.1.4
 Author:       Automattic
 Author URI:   http://automattic.com
 License:      GPLv2 or later
@@ -319,7 +319,7 @@ class Automattic_Developer {
 
 				echo '<p>' . esc_html__( 'We recommend that you also install and activate the following plugins:', 'a8c-developer' ) . '</p>';
 
-				echo '<ul>';
+				echo '<table class="recommended-plugins">';
 
 					foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
 						if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
@@ -328,15 +328,36 @@ class Automattic_Developer {
 						if ( $plugin_details['active'] )
 							continue;
 
+						echo '<tr>';
+
+						$details = $this->get_plugin_details( $plugin_slug );
+
+						if ( is_wp_error( $details ) )
+							$details = array();
+
+						$plugin_details = array_merge( (array) $details, array( 'slug' => $plugin_slug ), $plugin_details );
+
+						echo '<td><strong>' . $plugin_details['name'] . '</strong></td>';
+
+						echo '<td>';
+
 						if ( $this->is_recommended_plugin_installed( $plugin_slug ) ) {
 							$path = $this->get_path_for_recommended_plugin( $plugin_slug );
-							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c-developer-button-activate" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '">' . esc_html__( 'Activate', 'a8c-developer' ) . '</button></li>';
+
+							echo '<button type="button" class="a8c-developer-button-activate" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '">' . esc_html__( 'Activate', 'a8c-developer' ) . '</button>';
 						} else {
-							echo '<li>' . $plugin_details['name'] . ' <button type="button" class="a8c-developer-button-install" data-pluginslug="' . esc_attr( $plugin_slug ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_install_plugin_' . $plugin_slug ) . '">' . esc_html__( 'Install', 'a8c-developer' ) . '</button></li>';
+							echo '<button type="button" class="a8c-developer-button-install" data-pluginslug="' . esc_attr( $plugin_slug ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_install_plugin_' . $plugin_slug ) . '">' . esc_html__( 'Install', 'a8c-developer' ) . '</button>';
 						}
+
+						if ( ! empty( $plugin_details['short_description'] ) )
+								echo '<br /><span class="description">' . esc_html__( $plugin_details['short_description'] ) . '</span>';
+
+						echo '</td>';
+
+						echo '</tr>';
 					}
 
-				echo '</ul>';
+				echo '</table>';
 
 				echo '<script type="text/javascript">a8c_developer_bind_events();</script>';
 
@@ -413,11 +434,18 @@ class Automattic_Developer {
 
 		// Plugins
 		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( $this, 'settings_section_plugins' ), self::PAGE_SLUG . '_status' );
+
 		foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
 			if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
 				continue;
 
-			$plugin_details = array_merge( array( 'slug' => $plugin_slug ), $plugin_details );
+			$details = $this->get_plugin_details( $plugin_slug );
+
+			if ( is_wp_error( $details ) )
+				$details = array();
+
+			$plugin_details = array_merge( (array) $details, array( 'slug' => $plugin_slug ), $plugin_details );
+
 			add_settings_field( 'a8c_developer_plugin_' . $plugin_slug, $plugin_details['name'], array( $this, 'settings_field_plugin' ), self::PAGE_SLUG . '_status', 'a8c_developer_plugins', $plugin_details );
 		}
 
@@ -526,6 +554,9 @@ class Automattic_Developer {
 				echo '<span class="a8c-developer-notactive">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</span>';
 			}
 		}
+
+		if ( ! empty( $args['short_description'] ) )
+			echo '<br /><span class="description">' . $args['short_description']  . '</span>';
 	}
 
 	public function settings_section_constants() {
@@ -630,6 +661,36 @@ class Automattic_Developer {
 			return true;
 
 		return false;
+	}
+
+	/**
+	 * Retrieve plugin information for a given $slug
+	 *
+	 * Note that this does not use plugins_api(), as the .org api does not return
+	 * short descriptions in POST requests (that api endpoint is different from this one)
+	 *
+	 * @param string $slug The plugin slug
+	 * @return object The response object containing plugin details
+	 */
+	public function get_plugin_details( $slug ){
+		$cache_key = 'a8c_developer_plugin_details_' . $slug;
+
+		if ( false === ( $details = get_transient( $cache_key ) ) ) {
+			$request = wp_remote_get( 'http://api.wordpress.org/plugins/info/1.0/' . esc_url( $slug ), array( 'timeout' => 15 ) );
+		
+			if ( is_wp_error( $request ) ) {
+				$details = new WP_Error('a8c_developer_plugins_api_failed', __( 'An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="http://wordpress.org/support/">support forums</a>.' ), $request->get_error_message() );
+			} else {
+				$details = maybe_unserialize( wp_remote_retrieve_body( $request ) );
+
+				if ( ! is_object( $details ) && ! is_array( $details ) )
+					$details = new WP_Error('a8c_developer_plugins_api_failed', __( 'An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="http://wordpress.org/support/">support forums</a>.' ), wp_remote_retrieve_body( $request ) );
+				else
+					set_transient( $cache_key, $details, WEEK_IN_SECONDS );
+			}
+		}
+
+		return $details;
 	}
 
 	private function get_project_types() {
