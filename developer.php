@@ -5,7 +5,7 @@
 Plugin Name:  Developer
 Plugin URI:   http://wordpress.org/extend/plugins/developer/
 Description:  The first stop for every WordPress developer
-Version:      1.1.4
+Version:      1.1.5
 Author:       Automattic
 Author URI:   http://automattic.com
 License:      GPLv2 or later
@@ -302,10 +302,9 @@ class Automattic_Developer {
 
 				$to_install_or_enable = 0;
 
-				foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
-					if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
-						continue;
+				$recommended_plugins = $this->get_recommended_plugins();
 
+				foreach ( $recommended_plugins as $plugin_slug => $plugin_details ) {
 					if ( ! $plugin_details['active'] ) {
 						$to_install_or_enable++;
 					}
@@ -321,10 +320,7 @@ class Automattic_Developer {
 
 				echo '<table class="recommended-plugins">';
 
-					foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
-						if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
-							continue;
-
+					foreach ( $recommended_plugins as $plugin_slug => $plugin_details ) {
 						if ( $plugin_details['active'] )
 							continue;
 
@@ -435,10 +431,9 @@ class Automattic_Developer {
 		// Plugins
 		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( $this, 'settings_section_plugins' ), self::PAGE_SLUG . '_status' );
 
-		foreach ( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
-			if ( 'all' != $plugin_details['project_type'] && $plugin_details['project_type'] != $this->settings['project_type'] )
-				continue;
+		$recommended_plugins = $this->get_recommended_plugins();
 
+		foreach ( $recommended_plugins as $plugin_slug => $plugin_details ) {
 			$details = $this->get_plugin_details( $plugin_slug );
 
 			if ( is_wp_error( $details ) )
@@ -691,6 +686,61 @@ class Automattic_Developer {
 		}
 
 		return $details;
+	}
+
+	/**
+	 * Return an array of all plugins recommended for the current project type
+	 *
+	 * Only returns plugins that have been recommended for the project type defined
+	 * in $this->settings['project_type']
+	 * 
+	 * @return array An array of plugins recommended for the current project type
+	 */
+	public function get_recommended_plugins() {
+		return $this->get_recommended_plugins_by_type( $this->settings['project_type'] );
+	}
+
+	/**
+	 * Return an array of all plugins recommended for the given project type
+	 * 
+	 * @param  string $type The project type to return plugins for
+	 * @return array An associative array of plugins for the project type
+	 */
+	public function get_recommended_plugins_by_type( $type ) {
+		$plugins_by_type = array();
+
+		foreach( $this->recommended_plugins as $plugin_slug => $plugin_details ) {
+			if ( ! $this->plugin_is_recommended_for_project_type( $plugin_slug, $type ) )
+				continue;
+
+			$plugins_by_type[ $plugin_slug ] = $plugin_details;
+		}
+
+		return $plugins_by_type;
+	}
+
+	/**
+	 * Should the given plugin be recommended for the given project type?
+	 *
+	 * Determines whether or not a given $plugin_slug is recommended for a given $project_type
+	 * by checking the project types defined for it
+	 * 
+	 * @param  string $plugin_slug The plugin slug to check
+	 * @param  string $project_type The project type to check the plugin against
+	 * @return bool Boolean indicating if the plugin is recommended for the project type
+	 */
+	public function plugin_is_recommended_for_project_type( $plugin_slug, $project_type = null ) {
+		if ( null == $project_type )
+			$project_type = $this->settings['project_type'];
+
+		$plugin_details = $this->recommended_plugins[ $plugin_slug ];
+
+		if ( 'all' === $plugin_details['project_type'] ||
+			$plugin_details['project_type'] === $project_type ||
+			( is_array( $plugin_details['project_type'] ) && in_array( $project_type, $plugin_details['project_type'] ) ) )
+				return true;
+
+		return false;
 	}
 
 	private function get_project_types() {
