@@ -175,8 +175,14 @@ class Automattic_Developer {
 		);
 
 		$this->recommended_constants = array(
-			'WP_DEBUG'    => __( 'Enables <a href="http://codex.wordpress.org/Debugging_in_WordPress" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' ),
-			'SAVEQUERIES' => esc_html__( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' ),
+			'WP_DEBUG'    => array(
+				'project_type'	=> 'all',
+				'description' 	=> __( 'Enables <a href="http://codex.wordpress.org/Debugging_in_WordPress" target="_blank">debug mode</a> which helps identify and resolve issues', 'a8c-developer' )
+			),
+			'SAVEQUERIES' => array(
+				'project_type'	=> 'all',
+				'description'	=> esc_html__( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' )
+			)
 		);
 
 		register_setting( self::OPTION, self::OPTION, array( $this, 'settings_validate' ) );
@@ -446,10 +452,13 @@ class Automattic_Developer {
 
 		// Constants
 		add_settings_section( 'a8c_developer_constants', esc_html__( 'Constants', 'a8c-developer' ), array( $this, 'settings_section_constants' ), self::PAGE_SLUG . '_status' );
-		foreach ( $this->recommended_constants as $constant => $description ) {
+		
+		$recommended_constants = $this->get_recommended_constants();
+
+		foreach ( $recommended_constants as $constant => $constant_details ) {
 			add_settings_field( 'a8c_developer_constant_' . $constant, $constant, array( $this, 'settings_field_constant' ), self::PAGE_SLUG . '_status', 'a8c_developer_constants', array(
 				'constant'    => $constant,
-				'description' => $description,
+				'description' => $constant_details['description'],
 			) );
 		}
 
@@ -738,6 +747,61 @@ class Automattic_Developer {
 		if ( 'all' === $plugin_details['project_type'] ||
 			$plugin_details['project_type'] === $project_type ||
 			( is_array( $plugin_details['project_type'] ) && in_array( $project_type, $plugin_details['project_type'] ) ) )
+				return true;
+
+		return false;
+	}
+
+	/**
+	 * Return an array of all constants recommended for the current project type
+	 *
+	 * Only returns constants that have been recommended for the project type defined
+	 * in $this->settings['project_type']
+	 * 
+	 * @return array An array of constants recommended for the current project type
+	 */
+	public function get_recommended_constants() {
+		return $this->get_recommended_constants_by_type( $this->settings['project_type'] );
+	}
+
+	/**
+	 * Return an array of all constants recommended for the given project type
+	 * 
+	 * @param  string $type The project type to return constants for
+	 * @return array An associative array of constants for the project type
+	 */
+	public function get_recommended_constants_by_type( $type ) {
+		$constants_by_type = array();
+
+		foreach( $this->recommended_constants as $constant => $constant_details ) {
+			if ( ! $this->constant_is_recommended_for_project_type( $constant, $type ) )
+				continue;
+
+			$constants_by_type[ $constant ] = $constant_details;
+		}
+
+		return $constants_by_type;
+	}
+
+	/**
+	 * Should the given constant be recommended for the given project type?
+	 *
+	 * Determines whether or not a given $constant is recommended for a given $project_type
+	 * by checking the project types defined for it
+	 * 
+	 * @param  string $constant The constant to check
+	 * @param  string $project_type The project type to check the constant against
+	 * @return bool Boolean indicating if the constant is recommended for the project type
+	 */
+	public function constant_is_recommended_for_project_type( $constant, $project_type = null ) {
+		if ( null == $project_type )
+			$project_type = $this->settings['project_type'];
+
+		$constant_details = $this->recommended_constants[ $constant ];
+
+		if ( 'all' === $constant_details['project_type'] ||
+			$constant_details['project_type'] === $project_type ||
+			( is_array( $constant_details['project_type'] ) && in_array( $project_type, $constant_details['project_type'] ) ) )
 				return true;
 
 		return false;
