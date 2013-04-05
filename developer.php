@@ -106,13 +106,11 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'VIP Scanner', 'a8c-developer' ),
 				'active'       => class_exists( 'VIP_Scanner' ),
 			),
-			/*
 			'jetpack' => array(
 				'project_type' => 'wpcom-vip',
 				'name'         => esc_html__( 'Jetpack', 'a8c-developer' ),
 				'active'       => class_exists( 'Jetpack' ),
 			),
-			/**/
 			'grunion-contact-form' => array(
 				'project_type' => 'wpcom-vip',
 				'name'         => esc_html__( 'Grunion Contact Form', 'a8c-developer' ),
@@ -182,6 +180,10 @@ class Automattic_Developer {
 			'SAVEQUERIES' => array(
 				'project_type'	=> 'all',
 				'description'	=> esc_html__( 'Logs database queries to an array so you can review them. The Debug Bar plugin will list out database queries if you set this constant.', 'a8c-developer' )
+			),
+			'JETPACK_DEV_DEBUG'	=> array(
+				'project_type'	=> 'wpcom-vip',
+				'description'	=> __( 'Enables <a href="http://jetpack.me/2013/03/28/jetpack-dev-mode-release/">Development Mode</a> in Jetpack for testing features without a connection to WordPress.com.', 'a8c-developer' )
 			)
 		);
 
