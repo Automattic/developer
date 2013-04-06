@@ -361,6 +361,8 @@ class Automattic_Developer {
 						echo '</tr>';
 					}
 
+				echo '<tr><td colspan="2"><button type="button" class="button button-primary a8c-developer-button-close">' . esc_html__( 'Get Developing!', 'a8c-developer' ) . '</button></td></tr>';
+
 				echo '</table>';
 
 				echo '<script type="text/javascript">a8c_developer_bind_events();</script>';

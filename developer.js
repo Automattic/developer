@@ -127,6 +127,10 @@ function a8c_developer_bind_events() {
 				})
 			;
 		});
+
+		$( '.a8c-developer-button-close' ).on( 'click', function() {
+			$.colorbox.close();
+		});
 	})(jQuery);
 }
 
