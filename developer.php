@@ -5,7 +5,7 @@
 Plugin Name:  Developer
 Plugin URI:   http://wordpress.org/extend/plugins/developer/
 Description:  The first stop for every WordPress developer
-Version:      1.1.5
+Version:      1.1.6
 Author:       Automattic
 Author URI:   http://automattic.com
 License:      GPLv2 or later
@@ -24,7 +24,7 @@ class Automattic_Developer {
 	public $settings               = array();
 	public $default_settings       = array();
 
-	const VERSION                  = '1.1.5';
+	const VERSION                  = '1.1.6';
 	const OPTION                   = 'a8c_developer';
 	const PAGE_SLUG                = 'a8c_developer';
 
@@ -441,6 +441,10 @@ class Automattic_Developer {
 		// Plugins
 		add_settings_section( 'a8c_developer_plugins', esc_html__( 'Plugins', 'a8c-developer' ), array( $this, 'settings_section_plugins' ), self::PAGE_SLUG . '_status' );
 
+		wp_enqueue_script( 'plugin-install' );
+
+		add_thickbox();
+
 		$recommended_plugins = $this->get_recommended_plugins();
 
 		foreach ( $recommended_plugins as $plugin_slug => $plugin_details ) {
@@ -451,7 +455,13 @@ class Automattic_Developer {
 
 			$plugin_details = array_merge( (array) $details, array( 'slug' => $plugin_slug ), $plugin_details );
 
-			add_settings_field( 'a8c_developer_plugin_' . $plugin_slug, $plugin_details['name'], array( $this, 'settings_field_plugin' ), self::PAGE_SLUG . '_status', 'a8c_developer_plugins', $plugin_details );
+			$label = '<strong>' . esc_html( $plugin_details['name'] ) . '</strong>';
+
+			$label .= '<br /><a href="' . self_admin_url( 'plugin-install.php?tab=plugin-information&amp;plugin=' . $plugin_slug .
+								'&amp;TB_iframe=true&amp;width=600&amp;height=550' ) . '" class="thickbox" title="' .
+								esc_attr( sprintf( __( 'More information about %s' ), $plugin_details['name'] ) ) . '">' . __( 'Details' ) . '</a>';
+
+			add_settings_field( 'a8c_developer_plugin_' . $plugin_slug, $label, array( $this, 'settings_field_plugin' ), self::PAGE_SLUG . '_status', 'a8c_developer_plugins', $plugin_details );
 		}
 
 		// Constants

@@ -3,7 +3,7 @@ Contributors: automattic, batmoo, Viper007Bond, nbachiyski, tott, danielbachhube
 Tags: developer, development, local
 Requires at least: 3.4
 Tested up to: 3.5.1
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,6 +39,10 @@ Because you haven't asked one yet.
 4. The plugin's settings page (Tools > Developer) will check to make sure your environment is correctly configured, including plugins, constants, and other settings.
 
 == Changelog ==
+
+= 1.1.6 (2013-04-08) =
+* Made purpose of activate/install links on Settings page more obvious
+* Added link to full plugin details on Settings page (opens in Thickbox)
 
 = 1.1.5 (2013-04-05) =
 * Added ability to define multiple project types for plugins
