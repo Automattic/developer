@@ -24,7 +24,7 @@ class Automattic_Developer {
 	public $settings               = array();
 	public $default_settings       = array();
 
-	const VERSION                  = '1.1.2';
+	const VERSION                  = '1.1.5';
 	const OPTION                   = 'a8c_developer';
 	const PAGE_SLUG                = 'a8c_developer';
 
@@ -550,14 +550,14 @@ class Automattic_Developer {
 			// Needs to be activated
 			if ( current_user_can('activate_plugins') ) {
 				$path = $this->get_path_for_recommended_plugin( $args['slug'] );
-				echo '<a class="a8c-developer-notactive a8c-developer-button-activate" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</a>';
+				echo '<a class="a8c-developer-notactive a8c-developer-button-activate" href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) . '" data-path="' . esc_attr( $path ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_activate_plugin_' . $path ) . '" title="' . esc_attr__( 'Click here to activate', 'a8c-developer' ) . '">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . ' - <em>' . esc_html__( 'Click to Activate', 'a8c-developer' ) . '</em></a>';
 			} else {
 				echo '<span class="a8c-developer-notactive">' . esc_html__( 'INACTIVE', 'a8c-developer' ) . '</span>';
 			}
 		} else {
 			// Needs to be installed
 			if ( current_user_can('install_plugins') ) {
-				echo '<a class="a8c-developer-notactive a8c-developer-button-install" href="' . esc_url( wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) ) . '" data-pluginslug="' . esc_attr( $args['slug'] ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_install_plugin_' . $args['slug'] ) . '" title="' . esc_attr__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</a>';
+				echo '<a class="a8c-developer-notactive a8c-developer-button-install" href="' . esc_url( wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=' . $args['slug'] ), 'install-plugin_' . $args['slug'] ) ) . '" data-pluginslug="' . esc_attr( $args['slug'] ) . '" data-nonce="' . wp_create_nonce( 'a8c_developer_install_plugin_' . $args['slug'] ) . '" title="' . esc_attr__( 'Click here to install', 'a8c-developer' ) . '">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . ' - <em>' . esc_html__( 'Click to Install', 'a8c-developer' ) . '</em></a>';
 			} else {
 				echo '<span class="a8c-developer-notactive">' . esc_html__( 'NOT INSTALLED', 'a8c-developer' ) . '</span>';
 			}
