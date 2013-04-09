@@ -5,7 +5,7 @@
 Plugin Name:  Developer
 Plugin URI:   http://wordpress.org/extend/plugins/developer/
 Description:  The first stop for every WordPress developer
-Version:      1.1.6
+Version:      1.2
 Author:       Automattic
 Author URI:   http://automattic.com
 License:      GPLv2 or later
