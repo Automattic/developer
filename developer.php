@@ -393,8 +393,15 @@ class Automattic_Developer {
 
 				$install_result = $upgrader->install( $api->download_link );
 
-				if ( ! $install_result || is_wp_error( $install_result ) )
-					die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'a8c-developer' ), $install_result->get_error_message() ) );
+				if ( ! $install_result || is_wp_error( $install_result ) ) {
+					// $install_result can be false if the file system isn't writeable.
+					$error_message = __( 'Please ensure the file system is writeable', 'a8c-developer' );
+
+					if ( is_wp_error( $install_result ) )
+						$error_message = $install_result->get_error_message();
+
+					die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'a8c-developer' ), $error_message ) );
+				}
 
 				$activate_result = activate_plugin( $this->get_path_for_recommended_plugin( $_POST['plugin_slug'] ) );
 
