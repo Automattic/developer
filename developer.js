@@ -67,8 +67,6 @@ function a8c_developer_bind_events() {
 
 						$(button).unbind('click').prop('disabled', true);
 					} else {
-						alert( result );
-
 						$( button )
 							.html( a8c_developer_i18n.ERROR )
 							.nextAll( '.a8c-developer-action-result' )
@@ -107,8 +105,6 @@ function a8c_developer_bind_events() {
 
 						$(button).unbind('click').prop('disabled', true);
 					} else {
-						alert( result );
-
 						$( button )
 							.html( a8c_developer_i18n.ERROR )
 							.nextAll( '.a8c-developer-action-result' )
