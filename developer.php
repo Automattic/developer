@@ -15,6 +15,9 @@ Domain Path:  /languages/
 
 **************************************************************************/
 
+if ( defined( 'WP_CLI' ) && WP_CLI )
+	require_once( dirname( __FILE__ ) . '/includes/class-developer-cli-command.php' );
+
 class Automattic_Developer {
 
 	public $settings               = array();
