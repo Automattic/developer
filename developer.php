@@ -76,6 +76,11 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Debug Bar', 'a8c-developer' ),
 				'active'       => class_exists( 'Debug_Bar' ),
 			),
+			'debug-bar-console' => array(
+				'project_type' => 'all',
+				'name'         => esc_html__( 'Debug Bar Console', 'a8c-developer' ),
+				'active'       => function_exists( 'debug_bar_console_panel' ),
+			),
 			'debug-bar-cron' => array(
 				'project_type' => 'all',
 				'name'         => esc_html__( 'Debug Bar Cron', 'a8c-developer' ),
