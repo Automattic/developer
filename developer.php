@@ -5,7 +5,7 @@
 Plugin Name:  Developer
 Plugin URI:   http://wordpress.org/extend/plugins/developer/
 Description:  The first stop for every WordPress developer
-Version:      1.2
+Version:      1.2.1
 Author:       Automattic
 Author URI:   http://automattic.com
 License:      GPLv2 or later
@@ -146,6 +146,11 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Beta Tester', 'a8c-developer' ),
 				'active'       => class_exists( 'wp_beta_tester' ),
 				'filename'     => 'wp-beta-tester.php',
+			),
+			'mp6' => array(
+				'project_type' => 'wpcom-vip',
+				'name' 		   => esc_html__( 'MP6', 'a8c-developer' ),
+				'active'       => function_exists( 'mp6_replace_wp_default_styles' ),
 			),
 
 			// Theme Developer
