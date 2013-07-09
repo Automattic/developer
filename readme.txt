@@ -42,6 +42,7 @@ Because you haven't asked one yet.
 
 = 1.2.1 (2013-06-18) =
 * Added MP6 to recommended plugins
+* Added Koop's Debug Bar Console to recommended plugins
 
 = 1.1.6 (2013-04-08) =
 * Made purpose of activate/install links on Settings page more obvious
