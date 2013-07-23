@@ -116,11 +116,6 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Jetpack', 'a8c-developer' ),
 				'active'       => class_exists( 'Jetpack' ),
 			),
-			'grunion-contact-form' => array(
-				'project_type' => 'wpcom-vip',
-				'name'         => esc_html__( 'Grunion Contact Form', 'a8c-developer' ),
-				'active'       => defined( 'GRUNION_PLUGIN_DIR' ),
-			),
 			'polldaddy' => array(
 				'project_type' => 'wpcom-vip',
 				'name'         => esc_html__( 'Polldaddy Polls & Ratings', 'a8c-developer' ),
