@@ -44,6 +44,9 @@ class Automattic_Developer {
 		add_action( 'wp_ajax_a8c_developer_lightbox_step_1',	array( $this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_a8c_developer_install_plugin',		array( $this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_a8c_developer_activate_plugin',	array( $this, 'ajax_handler' ) );
+
+		if ( defined ( 'WP_CLI' ) && WP_CLI )
+			require_once( __DIR__ . '/includes/class-wp-cli-commands.php' );
 	}
 
 	// Internationalization
