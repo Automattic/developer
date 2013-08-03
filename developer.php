@@ -14,10 +14,9 @@ Text Domain:  a8c-developer
 Domain Path:  /languages/
 
 **************************************************************************/
-// Load helper class if installing a plugin
-if ( ! empty( $_POST['action'] ) && 'a8c_developer_install_plugin' == $_POST['action'] )
-	require_once( dirname( __FILE__ ) . '/includes/class-empty-upgrader-skin.php' );
 
+if ( defined( 'WP_CLI' ) && WP_CLI )
+	require_once( dirname( __FILE__ ) . '/includes/class-developer-cli-command.php' );
 
 class Automattic_Developer {
 
@@ -383,30 +382,9 @@ class Automattic_Developer {
 				if ( ! current_user_can( 'install_plugins' ) || ! current_user_can( 'activate_plugins' ) )
 					die( __( 'ERROR: You lack permissions to install and/or activate plugins.', 'a8c-developer' ) );
 
-				include_once ( ABSPATH . 'wp-admin/includes/plugin-install.php' );
-
-				$api = plugins_api( 'plugin_information', array( 'slug' => $_POST['plugin_slug'], 'fields' => array( 'sections' => false ) ) );
-
-				if ( is_wp_error( $api ) )
-					die( sprintf( __( 'ERROR: Error fetching plugin information: %s', 'a8c-developer' ), $api->get_error_message() ) );
-
-				$upgrader = new Plugin_Upgrader( new Automattic_Developer_Empty_Upgrader_Skin( array(
-					'nonce'  => 'install-plugin_' . $_POST['plugin_slug'],
-					'plugin' => $_POST['plugin_slug'],
-					'api'    => $api,
-				) ) );
-
-				$install_result = $upgrader->install( $api->download_link );
-
-				if ( ! $install_result || is_wp_error( $install_result ) ) {
-					// $install_result can be false if the file system isn't writeable.
-					$error_message = __( 'Please ensure the file system is writeable', 'a8c-developer' );
-
-					if ( is_wp_error( $install_result ) )
-						$error_message = $install_result->get_error_message();
-
-					die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'a8c-developer' ), $error_message ) );
-				}
+				$install_result = $this->install_plugin( $_POST['plugin_slug'] );
+				if ( is_wp_error( $install_result ) )
+					die( sprintf( __( 'ERROR: Failed to install plugin: %s', 'a8c-developer' ), $install_result->get_error_message() ) );
 
 				$activate_result = activate_plugin( $this->get_path_for_recommended_plugin( $_POST['plugin_slug'] ) );
 
@@ -435,6 +413,8 @@ class Automattic_Developer {
 		// Unknown action
 		die( '-1' );
 	}
+
+
 
 	public function settings_page() {
 		add_settings_section( 'a8c_developer_main', esc_html__( 'Main Configuration', 'a8c-developer' ), '__return_false', self::PAGE_SLUG . '_settings' );
@@ -721,6 +701,38 @@ class Automattic_Developer {
 		}
 
 		return $details;
+	}
+
+	/**
+	 * Install a plugin
+	 *
+	 * @param  string           $plugin_slug    The plugin slug
+	 * @return bool|WP_Error    $result         True on success, WP_Error on failure
+	 */
+	public function install_plugin( $plugin_slug ) {
+
+		include_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+		require_once( dirname( __FILE__ ) . '/includes/class-empty-upgrader-skin.php' );
+
+		$api = plugins_api( 'plugin_information', array( 'slug' => $plugin_slug, 'fields' => array( 'sections' => false ) ) );
+
+		if ( is_wp_error( $api ) )
+			return $api;
+
+		$upgrader = new Plugin_Upgrader( new Automattic_Developer_Empty_Upgrader_Skin( array(
+			'nonce'  => 'install-plugin_' . $plugin_slug,
+			'plugin' => $plugin_slug,
+			'api'    => $api,
+		) ) );
+
+		$install_result = $upgrader->install( $api->download_link );
+
+		if ( is_wp_error( $install_result ) )
+			return $install_result;
+		else if ( ! $install_result )
+			return new WP_Error( 'filesystem-problem', __( 'Please ensure the file system is writeable', 'a8c-developer' ) );
+
+		return true;
 	}
 
 	/**

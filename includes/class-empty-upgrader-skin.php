@@ -17,8 +17,8 @@ class Automattic_Developer_Empty_Upgrader_Skin extends WP_Upgrader_Skin {
 		return true;
 	}
 
-	public function error() {
-		die( '-1' );
+	public function error( $errors ) {
+		return $errors;
 	}
 
 	public function header() {}
