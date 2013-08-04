@@ -8,31 +8,37 @@ class Developer_Command extends WP_CLI_Command {
 	/**
 	 * Sets up Developer Plugin
 	 * @subcommand install-plugins
-	 * @synopsis --type=<wpcom-vip|wporg-theme>
+	 * @synopsis --type=<type> [--activate]
 	 */
 	function install_plugins( $args, $assoc_args ) {
 		global $automattic_developer;
-		$plugins = $automattic_developer->recommended_plugins;
 		$type = $assoc_args['type'];
+		$activate = isset( $assoc_args['activate'] ) && $assoc_args['activate'] == "true";
 
-		switch ( $type ) {
-			case 'wpcom-vip':
-			case 'wporg-theme':
-				foreach ( $plugins as $slug => $plugin ) {
-					// Don't try to install plugins that already exist
-					if ( file_exists( WP_CONTENT_DIR . '/plugins/' . $slug ) )
-						continue;
+		$reco_plugins = $automattic_developer->recommended_plugins;
+		$installed_plugins = array_keys( get_plugins() );
+		$types = array_keys( $automattic_developer->get_project_types() );
 
-					// Install and activate the plugin
-					if ( 'all' == $plugin['project_type'] || $type == $plugin['project_type'] )
-						WP_CLI::run_command( array( "plugin", "install", "$slug" ), array( "activate" => true ) );
+		if ( in_array( $type, $types ) ) {
+			foreach ( $reco_plugins as $slug => $plugin ) {
+				$path = $automattic_developer->get_path_for_recommended_plugin( $slug );
+				$activate = $activate && ( 'all' == $plugin['project_type'] || $type == $plugin['project_type'] );
+
+				// Download the plugin if we don't already have it
+				if ( ! in_array( $path, $installed_plugins ) )
+					WP_CLI::run_command( explode( " ", "plugin install $slug" ) );
+
+				// Install the plugin if --activate and it's the right type
+				if ( is_plugin_inactive( $path ) && $activate ) {
+					if ( NULL == activate_plugin( $path ) )
+						WP_CLI::success( "Activated " . $plugin['name'] );
 				}
-				break;
-
-			default:
-				WP_CLI::error( "Specify type of thing to install" );
+			}
+		} else {
+			WP_CLI::error( "Specify a valid type to install: <" . implode( "|", $types ) . ">" );
 		}
 	}
+
 }
 
 WP_CLI::add_command( 'developer', 'Developer_Command' );

@@ -836,7 +836,7 @@ class Automattic_Developer {
 		return false;
 	}
 
-	private function get_project_types() {
+	public function get_project_types() {
 		return array(
 			'wporg'       => __( 'Plugin for a self-hosted WordPress installation', 'a8c-developer' ),
 			'wporg-theme' => __( 'Theme for a self-hosted WordPress installation', 'a8c-developer' ),
