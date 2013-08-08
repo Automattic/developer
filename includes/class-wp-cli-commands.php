@@ -3,7 +3,7 @@
  * Developer Plugin commands for WP-CLI.
  * @since 1.2
  */
-class Developer_Command extends WP_CLI_Command {
+class Developer_WP_CLI_Command extends WP_CLI_Command {
 
 	/**
 	 * Sets up Developer Plugin
@@ -41,4 +41,4 @@ class Developer_Command extends WP_CLI_Command {
 
 }
 
-WP_CLI::add_command( 'developer', 'Developer_Command' );
+WP_CLI::add_command( 'developer', 'Developer_WP_CLI_Command' );
