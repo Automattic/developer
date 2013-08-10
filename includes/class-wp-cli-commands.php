@@ -1,7 +1,7 @@
 <?php
 /**
  * Developer Plugin commands for WP-CLI.
- * @since 1.2
+ * @since 1.2.2
  */
 class Developer_WP_CLI_Command extends WP_CLI_Command {
 
