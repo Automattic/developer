@@ -5,7 +5,7 @@
 Plugin Name:  Developer
 Plugin URI:   http://wordpress.org/extend/plugins/developer/
 Description:  The first stop for every WordPress developer
-Version:      1.2.1
+Version:      1.2.2
 Author:       Automattic
 Author URI:   http://automattic.com
 License:      GPLv2 or later
@@ -14,6 +14,7 @@ Text Domain:  a8c-developer
 Domain Path:  /languages/
 
 **************************************************************************/
+
 // Load helper class if installing a plugin
 if ( ! empty( $_POST['action'] ) && 'a8c_developer_install_plugin' == $_POST['action'] )
 	require_once( dirname( __FILE__ ) . '/includes/class-empty-upgrader-skin.php' );
@@ -24,7 +25,7 @@ class Automattic_Developer {
 	public $settings               = array();
 	public $default_settings       = array();
 
-	const VERSION                  = '1.1.6';
+	const VERSION                  = '1.2.2';
 	const OPTION                   = 'a8c_developer';
 	const PAGE_SLUG                = 'a8c_developer';
 
