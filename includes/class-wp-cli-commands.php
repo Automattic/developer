@@ -12,6 +12,12 @@ class Developer_WP_CLI_Command extends WP_CLI_Command {
 	 */
 	function install_plugins( $args, $assoc_args ) {
 		global $automattic_developer;
+
+		// wp-cli doesn't fire admin_init since 0.11.2
+		if (!did_action('admin_init')) {
+			$automattic_developer->admin_init();
+		}
+
 		$type = $assoc_args['type'];
 		$activate = isset( $assoc_args['activate'] ) && $assoc_args['activate'] == "true";
 
@@ -20,16 +26,18 @@ class Developer_WP_CLI_Command extends WP_CLI_Command {
 		$types = array_keys( $automattic_developer->get_project_types() );
 
 		if ( in_array( $type, $types ) ) {
+			$automattic_developer->save_project_type($type);
+
 			foreach ( $reco_plugins as $slug => $plugin ) {
 				$path = $automattic_developer->get_path_for_recommended_plugin( $slug );
-				$activate = $activate && ( 'all' == $plugin['project_type'] || $type == $plugin['project_type'] );
+				$activate_plugin = $activate && ( 'all' == $plugin['project_type'] || $type == $plugin['project_type'] );
 
 				// Download the plugin if we don't already have it
 				if ( ! in_array( $path, $installed_plugins ) )
 					WP_CLI::run_command( explode( " ", "plugin install $slug" ) );
 
 				// Install the plugin if --activate and it's the right type
-				if ( is_plugin_inactive( $path ) && $activate ) {
+				if ( is_plugin_inactive( $path ) && $activate_plugin ) {
 					if ( NULL == activate_plugin( $path ) )
 						WP_CLI::success( "Activated " . $plugin['name'] );
 				}
