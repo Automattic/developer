@@ -13,15 +13,15 @@ class Automattic_Developer_Empty_Upgrader_Skin extends WP_Upgrader_Skin {
 		parent::__construct( $args );
 	}
 
-	public function request_filesystem_credentials() {
+	public function request_filesystem_credentials( $error = false ) {
 		return true;
 	}
 
-	public function error() {
+	public function error( $errors ) {
 		die( '-1' );
 	}
 
 	public function header() {}
 	public function footer() {}
-	public function feedback() {}
+	public function feedback( $string ) {}
 }
