@@ -140,12 +140,6 @@ class Automattic_Developer {
 				'name'		=> esc_html__( 'Pig Latin', 'a8c-developer' ),
 				'active'	=> class_exists( 'PigLatin' ),
 			),
-			'wordpress-beta-tester' => array(
-				'project_type' => 'all',
-				'name'         => esc_html__( 'Beta Tester', 'a8c-developer' ),
-				'active'       => class_exists( 'wp_beta_tester' ),
-				'filename'     => 'wp-beta-tester.php',
-			),
 			'mp6' => array(
 				'project_type' => 'wpcom-vip',
 				'name' 		   => esc_html__( 'MP6', 'a8c-developer' ),
@@ -180,6 +174,15 @@ class Automattic_Developer {
 				'active'       => function_exists( 'tc_add_headers' ),
 			),
 		);
+
+		if ( ! self::is_dev_version() ) {
+			$this->recommended_plugins['wordpress-beta-tester'] = array(
+				'project_type' => 'all',
+				'name'         => esc_html__( 'Beta Tester', 'a8c-developer' ),
+				'active'       => class_exists( 'wp_beta_tester' ),
+				'filename'     => 'wp-beta-tester.php',
+			);
+		}
 
 		$this->recommended_constants = array(
 			'WP_DEBUG'    => array(
@@ -622,9 +625,7 @@ class Automattic_Developer {
 	}
 
 	public function settings_field_setting_development_version() {
-		$cur = get_preferred_from_update_core();
-
-		if ( $cur->response == 'development' ) {
+		if ( self::is_dev_version() ) {
 			echo '<span class="a8c-developer-active">' . esc_html__( 'ENABLED', 'a8c-developer' ) . '</span>';
 		} else {
 			echo '<a href="'. network_admin_url( 'update-core.php' ) .'" class="a8c-developer-notactive">' . esc_html__( 'DISABLED', 'a8c-developer' ) . '</a>';
@@ -843,6 +844,11 @@ class Automattic_Developer {
 			'wporg-theme' => __( 'Theme for a self-hosted WordPress installation', 'a8c-developer' ),
 			'wpcom-vip'   => __( 'Theme for a <a href="http://vip.wordpress.com" target="_blank">WordPress.com VIP</a> site', 'a8c-developer' ),
 		);
+	}
+
+	private static function is_dev_version() {
+		$cur = get_preferred_from_update_core();
+		return $cur->response == 'development';
 	}
 }
 
