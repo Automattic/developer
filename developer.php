@@ -136,7 +136,7 @@ class Automattic_Developer {
 				'active'       => class_exists( 'user_switching' ),
 			),
 			'piglatin' => array(
-				'project_type' 	=> 'all',
+				'project_type' 	=> array( 'wporg-theme', 'wporg' ),
 				'name'		=> esc_html__( 'Pig Latin', 'a8c-developer' ),
 				'active'	=> class_exists( 'PigLatin' ),
 			),
@@ -775,12 +775,10 @@ class Automattic_Developer {
 
 		$plugin_details = $this->recommended_plugins[ $plugin_slug ];
 
-		if ( 'all' === $plugin_details['project_type'] ||
-			$plugin_details['project_type'] === $project_type ||
-			( is_array( $plugin_details['project_type'] ) && in_array( $project_type, $plugin_details['project_type'] ) ) )
-				return true;
+		if ( 'all' == $plugin_details['project_type'] )
+			return true;
 
-		return false;
+		return self::is_project_type( $plugin_details, $project_type );
 	}
 
 	/**
@@ -830,12 +828,10 @@ class Automattic_Developer {
 
 		$constant_details = $this->recommended_constants[ $constant ];
 
-		if ( 'all' === $constant_details['project_type'] ||
-			$constant_details['project_type'] === $project_type ||
-			( is_array( $constant_details['project_type'] ) && in_array( $project_type, $constant_details['project_type'] ) ) )
-				return true;
+		if ( 'all' == $constant_details['project_type'] )
+			return true;
 
-		return false;
+		return self::is_project_type( $constant_details, $project_type );
 	}
 
 	public function get_project_types() {
@@ -849,6 +845,15 @@ class Automattic_Developer {
 	private static function is_dev_version() {
 		$cur = get_preferred_from_update_core();
 		return $cur->response == 'development';
+	}
+
+	private static function is_project_type( $project, $type ) {
+		$project_type = $project['project_type'];
+
+		if ( is_array( $project_type ) )
+			return in_array( $type, $project_type );
+
+		return $project_type == $type;
 	}
 }
 
