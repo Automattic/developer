@@ -95,6 +95,11 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'Debug Bar Extender', 'a8c-developer' ),
 				'active'       => class_exists( 'Debug_Bar_Extender' ),
 			),
+			'debug-bar-post-meta' => array(
+				'project_type' => 'all',
+				'name'         => esc_html__( 'Debug Bar Post Meta', 'a8c-developer' ),
+				'active'       => class_exists( 'Debug_Bar_Post_Meta' ),
+			),
 			'rewrite-rules-inspector' => array(
 				'project_type' 	=> 'all',
 				'name' 		=> esc_html__( 'Rewrite Rules Inspector', 'a8c-developer' ),
