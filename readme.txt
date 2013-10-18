@@ -3,7 +3,7 @@ Contributors: automattic, batmoo, Viper007Bond, nbachiyski, tott, danielbachhube
 Tags: developer, development, local
 Requires at least: 3.4
 Tested up to: 3.6
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,6 +39,10 @@ Because you haven't asked one yet.
 4. The plugin's settings page (Tools > Developer) will check to make sure your environment is correctly configured, including plugins, constants, and other settings.
 
 == Changelog ==
+
+= 1.2.5 (2013-10-18) =
+* Don't recommend Pig Latin for VIP
+* Fix cache key length by hashing relevant data
 
 = 1.2.4 (2013-10-08) =
 * Don't recommend Beta Tester if we have a dev version of WordPress
