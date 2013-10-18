@@ -708,7 +708,7 @@ class Automattic_Developer {
 	 * @return object The response object containing plugin details
 	 */
 	public function get_plugin_details( $slug ){
-		$cache_key = 'a8c_dev_details_' . $slug;
+		$cache_key = md5( 'a8c_developer_plugin_details_' . $slug );
 
 		if ( false === ( $details = get_transient( $cache_key ) ) ) {
 			$request = wp_remote_get( 'http://api.wordpress.org/plugins/info/1.0/' . esc_url( $slug ), array( 'timeout' => 15 ) );
