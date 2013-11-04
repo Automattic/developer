@@ -844,7 +844,7 @@ class Automattic_Developer {
 
 	private static function is_dev_version() {
 		$cur = get_preferred_from_update_core();
-		return $cur->response == 'development';
+		return ( isset( $cur->response ) && $cur->response == 'development' );
 	}
 
 	private static function is_project_type( $project, $type ) {
