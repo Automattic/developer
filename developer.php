@@ -135,13 +135,12 @@ class Automattic_Developer {
 				'name'         => esc_html__( 'User Switching', 'a8c-developer' ),
 				'active'       => class_exists( 'user_switching' ),
 			),
+			// Theme Developer
 			'piglatin' => array(
 				'project_type' 	=> array( 'wporg-theme', 'wporg' ),
 				'name'		=> esc_html__( 'Pig Latin', 'a8c-developer' ),
 				'active'	=> class_exists( 'PigLatin' ),
 			),
-
-			// Theme Developer
 			'rtl-tester' => array(
 				'project_type' => 'wporg-theme',
 				'name'         => esc_html__( 'RTL Tester', 'a8c-developer' ),
@@ -167,6 +166,11 @@ class Automattic_Developer {
 				'project_type' => 'wporg-theme',
 				'name'         => esc_html__( 'Theme Check', 'a8c-developer' ),
 				'active'       => function_exists( 'tc_add_headers' ),
+			),
+			'what-the-file' => array(
+				'project_type' => 'wporg-theme',
+				'name'         => esc_html__( 'What The File', 'a8c-developer' ),
+				'active'       => class_exists( 'WhatTheFile' ),
 			),
 		);
 
