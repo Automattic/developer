@@ -166,7 +166,7 @@ class Automattic_Developer {
 			'theme-check' => array(
 				'project_type' => 'wporg-theme',
 				'name'         => esc_html__( 'Theme Check', 'a8c-developer' ),
-				'active'       => function_exists( 'tc_add_headers' ),
+				'active'       => class_exists( 'ThemeCheckMain' ),
 			),
 		);
 
