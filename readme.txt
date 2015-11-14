@@ -3,7 +3,7 @@ Contributors: automattic, batmoo, Viper007Bond, nbachiyski, tott, danielbachhube
 Tags: developer, development, local
 Requires at least: 3.4
 Tested up to: 4.3
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,6 +39,11 @@ Because you haven't asked one yet.
 4. The plugin's settings page (Tools > Developer) will check to make sure your environment is correctly configured, including plugins, constants, and other settings.
 
 == Changelog ==
+
+= 1.2.6 (2015-11-14) =
+* Remove MP6
+* Fix strict standards notice
+* Fix PHP Notice in `is_dev_version()`
 
 = 1.2.5 (2013-10-18) =
 * Don't recommend Pig Latin for VIP
