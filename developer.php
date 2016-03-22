@@ -140,6 +140,11 @@ class Automattic_Developer {
 				'name'		=> esc_html__( 'Pig Latin', 'a8c-developer' ),
 				'active'	=> class_exists( 'PigLatin' ),
 			),
+			'view-admin-as' => array(
+				'project_type' => 'all',
+				'name'         => esc_html__( 'View Admin As', 'a8c-developer' ),
+				'active'       => class_exists( 'VAA_View_Admin_As' ),
+			),
 
 			// Theme Developer
 			'rtl-tester' => array(
