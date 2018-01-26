@@ -1,0 +1,21 @@
+{
+	"name": "automattic/developer",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0+",
+	"description": "A plugin, which helps WordPress developers develop.",
+	"homepage": "https://wordpress.org/plugins/developer/",
+	"keywords": [
+		"develop", "wordpress", "wp"
+	],
+	"support": {
+		"issues": "https://github.com/Automattic/developer/issues"
+	},
+	"require": {
+		"composer/installers": "~1.0"
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.x-dev"
+		}
+	}
+}
